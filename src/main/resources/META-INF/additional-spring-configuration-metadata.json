@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "application.watch-directory",
+  "type": "java.lang.String",
+  "description": "Monitored directory"
+}]}
