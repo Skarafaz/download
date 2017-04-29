@@ -135,7 +135,7 @@ public class DirectoryWatcher implements Runnable {
     }
 
     private void register(Path dir) throws IOException {
-        logger.debug("Watching directory: {}", dir);
+        logger.debug("Registering directory: {}", dir);
         keys.put(dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY,
                 StandardWatchEventKinds.ENTRY_DELETE), dir);
     }
