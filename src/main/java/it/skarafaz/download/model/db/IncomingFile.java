@@ -1,9 +1,6 @@
 package it.skarafaz.download.model.db;
 
-import java.nio.file.Path;
-
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,19 +11,17 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import it.skarafaz.download.hibernate.PathConverter;
-
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(name = "incoming_file_path_key", columnNames = { "path" }) })
 public class IncomingFile {
     private Long id;
-    private Path path;
+    private String path;
     private Boolean hidden = false;
 
     public IncomingFile() {
     }
 
-    public IncomingFile(Path path) {
+    public IncomingFile(String path) {
         this.path = path;
     }
 
@@ -43,12 +38,11 @@ public class IncomingFile {
 
     @NotNull
     @Column(nullable = false)
-    @Convert(converter = PathConverter.class)
-    public Path getPath() {
+    public String getPath() {
         return path;
     }
 
-    public void setPath(Path path) {
+    public void setPath(String path) {
         this.path = path;
     }
 

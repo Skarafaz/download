@@ -79,6 +79,8 @@ public class DirectoryWatcher implements Runnable {
             for (WatchEvent<?> event : key.pollEvents()) {
                 Kind<?> kind = event.kind();
 
+                logger.debug("Filesystem event: {}", kind);
+
                 if (kind.equals(StandardWatchEventKinds.OVERFLOW)) {
                     if (this.onOverflowListener != null) {
                         this.onOverflowListener.onOverflow();
