@@ -6,7 +6,7 @@ function(ready, parser, window, BorderContainer, Toolbar, ContentPane, MainContr
         parser.parse(window.body());
 
         app.mainCtrl = new MainController({
-            xhrManager : new XhrManager();
+            xhrManager : new XhrManager()
         });
 
         app.mainCtrl.init();
