@@ -38,7 +38,7 @@ public class FileSystemMonitorService implements ApplicationRunner, OnCreateList
     @Resource
     private FileSystemMonitorService thisProxy;
 
-    @Value("${application.watch-directory}")
+    @Value("${app.watch-directory}")
     private String watchDirectory;
 
     @Override

@@ -25,7 +25,7 @@ public class IncomingFileService {
     @Autowired
     private IncomingFileRepository repo;
 
-    @Value("${application.watch-directory}")
+    @Value("${app.watch-directory}")
     private String watchDirectory;
 
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {
