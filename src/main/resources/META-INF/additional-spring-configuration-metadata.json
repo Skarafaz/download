@@ -1,5 +1,22 @@
-{"properties": [{
-  "name": "app.watch-directory",
-  "type": "java.lang.String",
-  "description": "Monitored directory"
-}]}
+{"properties": [
+  {
+    "name": "app.watch-directory",
+    "type": "java.lang.String",
+    "description": "Monitored directory"
+  },
+  {
+    "name": "app.name",
+    "type": "java.lang.String",
+    "description": "Application name"
+  },
+  {
+    "name": "app.version",
+    "type": "java.lang.String",
+    "description": "Appplication version"
+  },
+  {
+    "name": "app.url",
+    "type": "java.lang.String",
+    "description": "Application URL"
+  }
+]}

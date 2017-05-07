@@ -1,0 +1,54 @@
+@CHARSET "UTF-8";
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
+    blockquote:focus, br:focus, canvas:focus, caption:focus, center:focus,
+    cite:focus, code:focus, col:focus, colgroup:focus, dd:focus, del:focus,
+    dfn:focus, dir:focus, div:focus, dl:focus, dt:focus, em:focus,
+    fieldset:focus, font:focus, form:focus, h1:focus, h2:focus, h3:focus,
+    h4:focus, h5:focus, h6:focus, hr:focus, i:focus, img:focus, ins:focus,
+    kbd:focus, label:focus, legend:focus, li:focus, link:focus, menu:focus,
+    ol:focus, p:focus, pre:focus, q:focus, s:focus, samp:focus, small:focus,
+    span:focus, strike:focus, strong:focus, sub:focus, sup:focus, table:focus,
+    tbody:focus, td:focus, tfoot:focus, th:focus, thead:focus, tr:focus,
+    tt:focus, u:focus, ul:focus, var:focus {
+    outline-width: 0px;
+}
+
+.app .noPadding {
+    padding: 0;
+}
+
+.app .dijitContentPane {
+    overflow: hidden;
+}
+
+.app .dijitToolbar {
+    background-image: none;
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
+    border-bottom: 1px solid #ffffff;
+}
+
+.app .dgrid {
+    height: 100%;
+}
+
+.app .dgrid-no-data {
+    font-size: 12px;
+    padding: 5px;
+    font-style: italic;
+}
+
+.app .dgrid-selected {
+    background-color: #bfd6eb;
+}
