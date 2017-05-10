@@ -5,10 +5,10 @@ function(ready, parser, window, BorderContainer, Toolbar, ContentPane, MainContr
     ready(function() {
         parser.parse(window.body());
 
-        app.mainCtrl = new MainController({
+        _global.objects.mainCtrl = new MainController({
             xhrManager : new XhrManager()
         });
 
-        app.mainCtrl.init();
+        _global.objects.mainCtrl.init();
     });
 });

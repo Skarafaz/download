@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="${locale}">
 <head>
-<title>${appName}</title>
+<title>${title}</title>
 <link rel="stylesheet" type="text/css" href="<@spring.url '/webjars/dojo/resources/dojo.css'/>" />
 <link rel="stylesheet" type="text/css" href="<@spring.url '/webjars/dijit/themes/claro/claro.css'/>" />
 <link rel="stylesheet" type="text/css" href="<@spring.url '/webjars/dgrid/css/dgrid.css'/>" />
@@ -33,10 +33,8 @@
 </script>
 <script type="text/javascript" src="<@spring.url '/webjars/dojo/dojo.js'/>"></script>
 <script type="text/javascript">
-    app = {};
-    app.name = '${appName}';
-    app.version = '${appVersion}';
-    app.url = '${appUrl}';
+    _global = ${data};
+    _global.objects = {};
 </script>
 <script type="text/javascript" src="<@spring.url '/js/app.js'/>"></script>
 </head>

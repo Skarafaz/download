@@ -3,25 +3,20 @@ package it.skarafaz.download.controller;
 import java.util.Locale;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import it.skarafaz.download.service.MainService;
+
 @Controller
 public class MainController {
-    @Value("${app.name}")
-    private String appName;
-    @Value("${app.version}")
-    private String appVersion;
-    @Value("${app.url}")
-    private String appUrl;
+    @Autowired
+    private MainService service;
 
     @GetMapping("/")
     public String main(Map<String, Object> model, Locale locale) {
-        model.put("locale", locale.getLanguage());
-        model.put("appName", appName);
-        model.put("appVersion", appVersion);
-        model.put("appUrl", appUrl);
+        service.fillTemplateModel(model, locale);
 
         return "main";
     }
