@@ -9,7 +9,8 @@ function(ready, parser, window, BorderContainer, Toolbar, ContentPane, MainContr
             xhrManager : new XhrManager(),
             messagesManager : new MessagesManager({
                 messages : _global.messages
-            })
+            }),
+            properties : _global.properties
         });
 
         _global.objects.mainCtrl.init();

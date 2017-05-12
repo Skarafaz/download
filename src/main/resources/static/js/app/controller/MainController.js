@@ -1,11 +1,13 @@
 define([ 'dojo/_base/declare', 'dojo/_base/lang', 'dijit/registry', 'dijit/form/Button', 'dijit/form/ToggleButton', 'dgrid/OnDemandGrid', 'dgrid/Keyboard',
-        'dgrid/Selection', 'dgrid/Selector', 'dstore/Request' ], //
+        'dgrid/Selection', 'dgrid/Selector', 'dstore/Request', 'dojo/string' ], //
 
-function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request) {
+function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request, string) {
     return declare('app.controller.MainController', null, {
         LIST_URL : 'file/list',
+        DOWNLOAD_URL : 'file/download/',
         xhrManager : null,
         messagesManager : null,
+        properties : null,
         container : null,
         toolbar : null,
         refreshButton : null,
@@ -53,7 +55,16 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                     label : this.messagesManager.get('main.grid.id')
                 }, {
                     field : 'path',
-                    label : this.messagesManager.get('main.grid.path')
+                    label : this.messagesManager.get('main.grid.path'),
+                    get : function(item) {
+                        return item;
+                    },
+                    formatter : lang.hitch(this, function(item) {
+                        return string.substitute('<a href="${url}">${label}</a>', {
+                            url : this.createDownloadUrl(item.id),
+                            label : item.path
+                        });
+                    })
                 } ],
                 loadingMessage : '<div style="padding: 5px;"><i class="fa fa-spinner fa-spin fa-lg"></i></div>',
                 noDataMessage : this.messagesManager.get('main.grid.noData'),
@@ -63,6 +74,13 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         },
         onRefreshButtonClick : function() {
             this.grid.refresh();
+        },
+        createDownloadUrl : function(id) {
+            return string.substitute('${base}${download}${id}', {
+                base : this.properties.url,
+                download : this.DOWNLOAD_URL,
+                id : id
+            });
         }
     });
 });
