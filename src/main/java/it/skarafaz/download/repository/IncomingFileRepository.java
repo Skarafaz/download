@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import it.skarafaz.download.model.db.IncomingFile;
+import it.skarafaz.download.model.entity.IncomingFile;
 
 public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long> {
 

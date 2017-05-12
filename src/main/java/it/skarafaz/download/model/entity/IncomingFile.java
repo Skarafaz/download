@@ -1,4 +1,4 @@
-package it.skarafaz.download.model.db;
+package it.skarafaz.download.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +29,7 @@ public class IncomingFile {
     @GenericGenerator(name = "genId", strategy = "it.skarafaz.download.hibernate.SequenceGenerator")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "genId")
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -39,7 +39,7 @@ public class IncomingFile {
     @NotNull
     @Column(nullable = false)
     public String getPath() {
-        return path;
+        return this.path;
     }
 
     public void setPath(String path) {
@@ -49,7 +49,7 @@ public class IncomingFile {
     @NotNull
     @Column(nullable = false)
     public Boolean getHidden() {
-        return hidden;
+        return this.hidden;
     }
 
     public void setHidden(Boolean hidden) {

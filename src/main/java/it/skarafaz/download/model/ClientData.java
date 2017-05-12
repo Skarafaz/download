@@ -2,22 +2,22 @@ package it.skarafaz.download.model;
 
 import java.util.Map;
 
-import it.skarafaz.download.configuration.AppPropertiesConfiguration;
+import it.skarafaz.download.configuration.AppProperties;
 
 public class ClientData {
-    private AppPropertiesConfiguration properties;
+    private AppProperties properties;
     private Map<String, String> messages;
 
-    public AppPropertiesConfiguration getProperties() {
-        return properties;
+    public AppProperties getProperties() {
+        return this.properties;
     }
 
-    public void setProperties(AppPropertiesConfiguration properties) {
+    public void setProperties(AppProperties properties) {
         this.properties = properties;
     }
 
     public Map<String, String> getMessages() {
-        return messages;
+        return this.messages;
     }
 
     public void setMessages(Map<String, String> messages) {

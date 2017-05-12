@@ -18,5 +18,20 @@
     "name": "app.url",
     "type": "java.lang.String",
     "description": "Application URL"
+  },
+  {
+    "name": "executor.core-pool-size",
+    "type": "java.lang.Integer",
+    "description": "Task executor core pool size"
+  },
+  {
+    "name": "executor.max-pool-size",
+    "type": "java.lang.Integer",
+    "description": "Task executor max pool size"
+  },
+  {
+    "name": "executor.queue-capacity",
+    "type": "java.lang.Integer",
+    "description": "Task executor queue capacity"
   }
 ]}

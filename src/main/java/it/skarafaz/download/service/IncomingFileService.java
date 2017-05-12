@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,23 +19,22 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.skarafaz.download.configuration.AppProperties;
 import it.skarafaz.download.exception.IncomingFileNotFoundException;
-import it.skarafaz.download.model.db.IncomingFile;
+import it.skarafaz.download.model.entity.IncomingFile;
 import it.skarafaz.download.repository.IncomingFileRepository;
 
 @Service
 @Transactional
 public class IncomingFileService {
     private static final int BUFFER_SIZE = 4096;
-
     @Autowired
-    private IncomingFileRepository repo;
-
-    @Value("${app.watch-directory}")
-    private String watchDirectory;
+    private IncomingFileRepository incomingFileRepository;
+    @Autowired
+    private AppProperties appProperties;
 
     public Page<IncomingFile> list(String[] sort, int start, int count) {
-        return repo.findAll(new PageRequest(start / count, count, createSort(sort)));
+        return this.incomingFileRepository.findAll(new PageRequest(start / count, count, createSort(sort)));
     }
 
     private Sort createSort(String[] sort) {
@@ -50,7 +48,7 @@ public class IncomingFileService {
     }
 
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {
-        IncomingFile incomingFile = repo.findOne(id);
+        IncomingFile incomingFile = this.incomingFileRepository.findOne(id);
 
         if (incomingFile == null) {
             throw new IncomingFileNotFoundException(id);
@@ -59,7 +57,7 @@ public class IncomingFileService {
         incomingFile.setHidden(true);
 
         try {
-            File file = new File(watchDirectory, incomingFile.getPath());
+            File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());
 
             FileInputStream inputStream;
             inputStream = new FileInputStream(file);

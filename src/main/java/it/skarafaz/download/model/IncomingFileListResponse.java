@@ -4,19 +4,19 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import it.skarafaz.download.model.db.IncomingFile;
+import it.skarafaz.download.model.entity.IncomingFile;
 
 public class IncomingFileListResponse {
     private List<IncomingFile> items;
     private long total;
 
     public IncomingFileListResponse(Page<IncomingFile> page) {
-        items = page.getContent();
-        total = page.getTotalElements();
+        this.items = page.getContent();
+        this.total = page.getTotalElements();
     }
 
     public List<IncomingFile> getItems() {
-        return items;
+        return this.items;
     }
 
     public void setItems(List<IncomingFile> items) {
@@ -24,7 +24,7 @@ public class IncomingFileListResponse {
     }
 
     public long getTotal() {
-        return total;
+        return this.total;
     }
 
     public void setTotal(long total) {

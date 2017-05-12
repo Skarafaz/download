@@ -12,11 +12,11 @@ import it.skarafaz.download.service.MainService;
 @Controller
 public class MainController {
     @Autowired
-    private MainService service;
+    private MainService mainService;
 
     @GetMapping("/")
     public String main(Map<String, Object> model, Locale locale) {
-        service.fillTemplateModel(model, locale);
+        this.mainService.fillTemplateModel(model, locale);
 
         return "main";
     }

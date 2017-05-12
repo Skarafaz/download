@@ -4,24 +4,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Configuration
-@EnableConfigurationProperties
 @ConfigurationProperties("app")
-public class AppPropertiesConfiguration {
+public class AppProperties {
     private String name;
     private String version;
     private String url;
     private String watchDirectory;
 
-    public AppPropertiesConfiguration() {
+    public AppProperties() {
     }
 
-    public AppPropertiesConfiguration(AppPropertiesConfiguration props) {
+    public AppProperties(AppProperties props) {
         this.name = props.getName();
         this.version = props.getVersion();
         this.url = props.getUrl();
@@ -29,7 +27,7 @@ public class AppPropertiesConfiguration {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -37,7 +35,7 @@ public class AppPropertiesConfiguration {
     }
 
     public String getVersion() {
-        return version;
+        return this.version;
     }
 
     public void setVersion(String version) {
@@ -45,7 +43,7 @@ public class AppPropertiesConfiguration {
     }
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public void setUrl(String url) {
@@ -53,7 +51,7 @@ public class AppPropertiesConfiguration {
     }
 
     public String getWatchDirectory() {
-        return watchDirectory;
+        return this.watchDirectory;
     }
 
     public void setWatchDirectory(String watchDirectory) {
@@ -66,7 +64,7 @@ public class AppPropertiesConfiguration {
     }
 
     @JsonIgnore
-    public AppPropertiesConfiguration getThis() {
-        return new AppPropertiesConfiguration(this);
+    public AppProperties getThis() {
+        return new AppProperties(this);
     }
 }

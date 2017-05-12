@@ -1,4 +1,4 @@
-package it.skarafaz.download.util;
+package it.skarafaz.download.service;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -21,11 +21,9 @@ import org.slf4j.LoggerFactory;
 
 public class DirectoryWatcher implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(DirectoryWatcher.class);
-
     private final Path root;
     private final WatchService watcher;
     private final Map<WatchKey, Path> keys;
-
     private OnCreateListener onCreateListener;
     private OnModifyListener onModifyListener;
     private OnDeleteListener onDeleteListener;

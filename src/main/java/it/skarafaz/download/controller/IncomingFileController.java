@@ -18,16 +18,16 @@ import it.skarafaz.download.service.IncomingFileService;
 @RequestMapping("/file")
 public class IncomingFileController {
     @Autowired
-    private IncomingFileService service;
+    private IncomingFileService incomingFileService;
 
     @GetMapping("/list")
     public @ResponseBody IncomingFileListResponse list(@RequestParam String[] sort, @RequestParam int start,
             @RequestParam int count) {
-        return new IncomingFileListResponse(service.list(sort, start, count));
+        return new IncomingFileListResponse(this.incomingFileService.list(sort, start, count));
     }
 
     @GetMapping("/download/{id}")
     public void download(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-        service.download(id, request, response);
+        this.incomingFileService.download(id, request, response);
     }
 }

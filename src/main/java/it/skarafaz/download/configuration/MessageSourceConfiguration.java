@@ -3,7 +3,6 @@ package it.skarafaz.download.configuration;
 import java.nio.charset.Charset;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +11,6 @@ import org.springframework.util.StringUtils;
 import it.skarafaz.download.spring.ExtendedResourceBundleMessageSource;
 
 @Configuration
-@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "spring.messages")
 public class MessageSourceConfiguration {
     private String basename = "messages";
@@ -54,6 +52,7 @@ public class MessageSourceConfiguration {
         messageSource.setFallbackToSystemLocale(this.fallbackToSystemLocale);
         messageSource.setCacheSeconds(this.cacheSeconds);
         messageSource.setAlwaysUseMessageFormat(this.alwaysUseMessageFormat);
+
         return messageSource;
     }
 }
