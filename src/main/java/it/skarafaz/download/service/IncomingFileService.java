@@ -4,12 +4,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +34,20 @@ public class IncomingFileService {
 
     @Value("${app.watch-directory}")
     private String watchDirectory;
+
+    public Page<IncomingFile> list(String[] sort, int start, int count) {
+        return repo.findAll(new PageRequest(start / count, count, createSort(sort)));
+    }
+
+    private Sort createSort(String[] sort) {
+        List<Order> orders = new ArrayList<>();
+        for (String str : sort) {
+            String[] splitStr = str.split("-");
+            orders.add(new Order(Direction.valueOf(splitStr[0]), splitStr[1]));
+        }
+
+        return new Sort(orders);
+    }
 
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {
         IncomingFile incomingFile = repo.findOne(id);

@@ -39,6 +39,17 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
     border-bottom: 1px solid #ffffff;
 }
 
+.app .toolbarIcon {
+    background-repeat: no-repeat;
+    height: 24px;
+    text-align: center;
+    width: 24px;
+}
+
+.app .toolbarIcon.toolbarRefreshIcon {
+    background-image: url("../img/refresh.png");
+}
+
 .app .dgrid {
     height: 100%;
 }
@@ -51,4 +62,11 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
 
 .app .dgrid-selected {
     background-color: #bfd6eb;
+}
+
+.app .dgrid .field-selector {
+    width: 30px;
+}
+.app .dgrid .field-id {
+    width: 60px;
 }
