@@ -1,7 +1,7 @@
 define([ 'dojo/_base/declare', 'dojo/_base/lang', 'dijit/registry', 'dijit/form/Button', 'dijit/form/ToggleButton', 'dgrid/OnDemandGrid', 'dgrid/Keyboard',
-        'dgrid/Selection', 'dgrid/Selector', 'dstore/Request', 'dojo/string', 'dojo/aspect', 'dojo/dom-class' ], //
+        'dgrid/Selection', 'dgrid/Selector', 'dstore/Request', 'dojo/string', 'dojo/aspect', 'dojo/dom-class', 'dojo/_base/array', 'Clipboard' ], //
 
-function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request, string, aspect, domClass) {
+function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request, string, aspect, domClass, array, Clipboard) {
     return declare('app.controller.MainController', null, {
         LIST_URL : 'file/list',
         DOWNLOAD_URL : 'file/download/',
@@ -11,6 +11,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         container : null,
         toolbar : null,
         refreshButton : null,
+        clipboardButton : null,
+        clipboard : null,
         toggleShowHiddenButton : null,
         store : null,
         grid : null,
@@ -36,6 +38,18 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
             this.refreshButton.startup();
             this.toolbar.addChild(this.refreshButton);
+
+            this.clipboardButton = new Button({
+                iconClass : 'toolbarIcon clipboardButtonIcon',
+                label : this.messagesManager.get('main.toolbar.clipboard'),
+                disabled : true
+            });
+            this.clipboardButton.startup();
+            this.toolbar.addChild(this.clipboardButton);
+
+            this.clipboard = new Clipboard(this.clipboardButton.domNode, {
+                text : lang.hitch(this, this.onClipboardButtonClick)
+            });
 
             this.toggleShowHiddenButton = new ToggleButton({
                 iconClass : 'toolbarIcon toggleShowHiddenButtonIcon',
@@ -91,14 +105,35 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                 }
                 return row;
             });
+
+            this.grid.on('dgrid-select,dgrid-deselect', lang.hitch(this, this.onGridSelectDeselect));
+        },
+        onGridSelectDeselect : function() {
+            this.clipboardButton.set('disabled', this.getGridSelection().length === 0);
         },
         onRefreshButtonClick : function() {
             this.grid.refresh();
+        },
+        onClipboardButtonClick : function() {
+            var text = '';
+            array.forEach(this.getGridSelection(), function(item) {
+                text += this.createDownloadUrl(item.id) + '\n';
+            }, this);
+            return text;
         },
         onToggleShowHiddenButtonChange : function(checked) {
             this.grid.set('collection', checked ? this.store.filter({
                 showHidden : true
             }) : this.store);
+        },
+        getGridSelection : function() {
+            var selection = [];
+            for ( var rowId in this.grid.selection) {
+                if (this.grid.selection[rowId] === true) {
+                    selection.push(this.grid.row(rowId).data);
+                }
+            }
+            return selection;
         },
         createDownloadUrl : function(id) {
             return string.substitute('${base}${download}${id}', {

@@ -27,7 +27,10 @@
         }, {
             name : 'app',
             location : '/js/app'
-        } ]
+        } ],
+        paths: {
+            "Clipboard" : "/webjars/clipboard/dist/clipboard.min"
+        }
     };
 </script>
 <script type="text/javascript" src="<@spring.url '/webjars/dojo/dojo.js'/>"></script>
