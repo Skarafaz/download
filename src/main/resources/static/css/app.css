@@ -46,8 +46,12 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
     width: 24px;
 }
 
-.app .toolbarIcon.toolbarRefreshIcon {
+.app .toolbarIcon.refreshButtonIcon {
     background-image: url("../img/refresh.png");
+}
+
+.app .toolbarIcon.toggleShowHiddenButtonIcon {
+    background-image: url("../img/eye.png");
 }
 
 .app .dgrid {
@@ -62,6 +66,18 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
 
 .app .dgrid-selected {
     background-color: #bfd6eb;
+}
+
+.app .dgrid .dgrid-row.hiddenRow {
+    color : #aaa;
+}
+
+.app .dgrid .dgrid-row.hiddenRow a {
+    color : #aaa;
+}
+
+.app .dgrid .dgrid-row a {
+    color : black;
 }
 
 .app .dgrid .field-selector {

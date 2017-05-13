@@ -21,9 +21,9 @@ public class IncomingFileController {
     private IncomingFileService incomingFileService;
 
     @GetMapping("/list")
-    public @ResponseBody IncomingFileListResponse list(@RequestParam String[] sort, @RequestParam int start,
-            @RequestParam int count) {
-        return new IncomingFileListResponse(this.incomingFileService.list(sort, start, count));
+    public @ResponseBody IncomingFileListResponse list(@RequestParam(required = false) Boolean showHidden,
+            @RequestParam String[] sort, @RequestParam int start, @RequestParam int count) {
+        return new IncomingFileListResponse(this.incomingFileService.list(showHidden, sort, start, count));
     }
 
     @GetMapping("/download/{id}")

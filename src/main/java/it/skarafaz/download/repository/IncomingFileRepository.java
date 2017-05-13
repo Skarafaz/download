@@ -1,5 +1,7 @@
 package it.skarafaz.download.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import it.skarafaz.download.model.entity.IncomingFile;
 
 public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long> {
+
+    @Query("from IncomingFile f where f.hidden = false")
+    Page<IncomingFile> findVisible(Pageable pageable);
 
     IncomingFile findByPath(String path);
 

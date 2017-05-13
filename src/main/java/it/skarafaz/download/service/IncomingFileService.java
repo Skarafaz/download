@@ -33,8 +33,16 @@ public class IncomingFileService {
     @Autowired
     private AppProperties appProperties;
 
-    public Page<IncomingFile> list(String[] sort, int start, int count) {
-        return this.incomingFileRepository.findAll(new PageRequest(start / count, count, createSort(sort)));
+    public Page<IncomingFile> list(Boolean showHidden, String[] sort, int start, int count) {
+        Page<IncomingFile> result = null;
+
+        if (showHidden != null && showHidden == true) {
+            result = this.incomingFileRepository.findAll(new PageRequest(start / count, count, createSort(sort)));
+        } else {
+            result = this.incomingFileRepository.findVisible(new PageRequest(start / count, count, createSort(sort)));
+        }
+
+        return result;
     }
 
     private Sort createSort(String[] sort) {

@@ -11,7 +11,6 @@
 <script type="text/javascript">
     dojoConfig = {
         async : true,
-        cacheBust: false,
         locale : '${locale}',
         packages : [ {
             name : 'dojo',
