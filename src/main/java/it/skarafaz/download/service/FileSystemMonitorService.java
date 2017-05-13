@@ -56,7 +56,7 @@ public class FileSystemMonitorService implements ApplicationRunner, OnCreateList
                 logger.error("I/O Error");
                 logger.error("{}: {}", e.getClass().getName(), e.getMessage());
             }
-        } else {
+        } else if (!path.getFileName().toString().startsWith(".")) {
             saveIncomingFile(path);
         }
     }
