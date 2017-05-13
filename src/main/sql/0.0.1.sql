@@ -1,0 +1,6 @@
+CREATE TABLE incoming_file
+(
+  id       BIGSERIAL NOT NULL PRIMARY KEY,
+  "path"   TEXT NOT NULL UNIQUE,
+  hidden   BOOLEAN NOT NULL DEFAULT FALSE
+);
