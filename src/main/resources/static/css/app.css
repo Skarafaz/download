@@ -62,6 +62,7 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
     font-size: 12px;
     padding: 5px;
     font-style: italic;
+    color: #aaa;
 }
 
 .app .dgrid-selected {
