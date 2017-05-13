@@ -12,6 +12,7 @@
     dojoConfig = {
         async : true,
         locale : '${locale}',
+        cacheBust : ${deploy?c},
         packages : [ {
             name : 'dojo',
             location : '/webjars/dojo'

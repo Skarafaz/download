@@ -1,9 +1,11 @@
 package it.skarafaz.download.service;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,8 @@ import it.skarafaz.download.spring.ExtendedMessageSource;
 @Transactional
 public class MainService {
     @Autowired
+    private Environment environment;
+    @Autowired
     private ExtendedMessageSource messageSource;
     @Autowired
     private ObjectMapper objectMapper;
@@ -26,6 +30,7 @@ public class MainService {
     public void fillTemplateModel(Map<String, Object> model, Locale locale) {
         model.put("locale", locale.getLanguage());
         model.put("title", this.appProperties.getName());
+        model.put("deploy", !Arrays.asList(this.environment.getActiveProfiles()).contains("dev"));
         model.put("data", stringifyClientData(locale));
     }
 
