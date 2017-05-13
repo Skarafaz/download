@@ -40,10 +40,12 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
 }
 
 .app .toolbarIcon {
+    background-position: center center;
     background-repeat: no-repeat;
+    background-size: 100% auto;
     height: 24px;
-    text-align: center;
     width: 24px;
+    text-align: center;
 }
 
 .app .dijitDisabled .toolbarIcon {
