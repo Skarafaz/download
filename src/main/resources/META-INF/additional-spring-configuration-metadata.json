@@ -33,5 +33,10 @@
     "name": "executor.queue-capacity",
     "type": "java.lang.Integer",
     "description": "Task executor queue capacity"
+  },
+  {
+    "name": "server.ajp-port",
+    "type": "java.lang.Integer",
+    "description": "Tomcat ajp port"
   }
 ]}
