@@ -78,20 +78,22 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                     field : 'selector',
                     selector : 'checkbox'
                 }, {
-                    field : 'id',
-                    label : this.messagesManager.get('main.grid.id')
-                }, {
-                    field : 'path',
-                    label : this.messagesManager.get('main.grid.path'),
+                    field : 'download',
+                    label : '',
                     get : function(item) {
                         return item;
                     },
                     formatter : lang.hitch(this, function(item) {
-                        return string.substitute('<a href="${url}">${label}</a>', {
-                            url : this.createDownloadUrl(item),
-                            label : item.path
+                        return string.substitute('<a href="${url}"><i class="fa fa-download" aria-hidden="true"></i></a>', {
+                            url : this.createDownloadUrl(item)
                         });
                     })
+                }, {
+                    field : 'id',
+                    label : this.messagesManager.get('main.grid.id')
+                }, {
+                    field : 'path',
+                    label : this.messagesManager.get('main.grid.path')
                 } ],
                 loadingMessage : '<div style="padding: 5px;"><i class="fa fa-spinner fa-spin fa-lg"></i></div>',
                 noDataMessage : this.messagesManager.get('main.grid.noData'),
