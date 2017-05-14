@@ -88,7 +88,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                     },
                     formatter : lang.hitch(this, function(item) {
                         return string.substitute('<a href="${url}">${label}</a>', {
-                            url : this.createDownloadUrl(item.id),
+                            url : this.createDownloadUrl(item),
                             label : item.path
                         });
                     })
@@ -117,7 +117,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         onClipboardButtonClick : function() {
             var text = '';
             array.forEach(this.getGridSelection(), function(item) {
-                text += this.createDownloadUrl(item.id) + '\n';
+                text += this.createDownloadUrl(item) + '\n';
             }, this);
             return text;
         },
@@ -135,11 +135,12 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             }
             return selection;
         },
-        createDownloadUrl : function(id) {
-            return string.substitute('${base}${download}${id}', {
+        createDownloadUrl : function(item) {
+            return string.substitute('${base}${download}${id}?${path}', {
                 base : this.properties.url,
                 download : this.DOWNLOAD_URL,
-                id : id
+                id : item.id,
+                path : item.path
             });
         }
     });
