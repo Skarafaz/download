@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -64,25 +65,26 @@ public class IncomingFileService {
 
         incomingFile.setHidden(true);
 
+        File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());
+
+        String mime = request.getServletContext().getMimeType(file.getAbsolutePath());
+        if (mime == null) {
+            mime = "application/octet-stream";
+        }
+
+        response.setContentType(mime);
+        response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
+        response.setHeader("Content-Length", new Long(file.length()).toString());
+
         FileInputStream in = null;
         OutputStream out = null;
 
         try {
-            File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());
-
-            String mime = request.getServletContext().getMimeType(file.getAbsolutePath());
-            if (mime == null) {
-                mime = "application/octet-stream";
-            }
-
-            response.setContentType(mime);
-            response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
-            response.setHeader("Content-Length", new Long(file.length()).toString());
-
             in = new FileInputStream(file);
             out = response.getOutputStream();
             IOUtils.copyLarge(in, out);
-
+        } catch (ClientAbortException e) {
+            // ignore
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
