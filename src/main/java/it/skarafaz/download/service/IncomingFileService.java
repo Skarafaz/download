@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,37 +65,35 @@ public class IncomingFileService {
 
         incomingFile.setHidden(true);
 
+        FileInputStream in = null;
+        OutputStream out = null;
+
         try {
             File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());
 
-            FileInputStream inputStream;
-            inputStream = new FileInputStream(file);
+            in = new FileInputStream(file);
+            out = response.getOutputStream();
 
-            String mimeType = request.getServletContext().getMimeType(file.getAbsolutePath());
-            if (mimeType == null) {
-                mimeType = "application/octet-stream";
+            String mime = request.getServletContext().getMimeType(file.getAbsolutePath());
+            if (mime == null) {
+                mime = "application/octet-stream";
             }
 
-            response.setContentType(mimeType);
-            response.setContentLength((int) file.length());
-
-            String headerKey = "Content-Disposition";
-            String headerValue = String.format("attachment; filename=\"%s\"", file.getName());
-            response.setHeader(headerKey, headerValue);
-
-            OutputStream outStream = response.getOutputStream();
+            response.setContentType(mime);
+            response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
+            response.setHeader("Content-Length", new Long(file.length()).toString());
 
             byte[] buffer = new byte[BUFFER_SIZE];
             int bytesRead = -1;
 
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outStream.write(buffer, 0, bytesRead);
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
             }
-
-            inputStream.close();
-            outStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(out);
         }
     }
 }
