@@ -28,7 +28,6 @@ import it.skarafaz.download.repository.IncomingFileRepository;
 @Service
 @Transactional
 public class IncomingFileService {
-    private static final int BUFFER_SIZE = 4096;
     @Autowired
     private IncomingFileRepository incomingFileRepository;
     @Autowired
@@ -71,9 +70,6 @@ public class IncomingFileService {
         try {
             File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());
 
-            in = new FileInputStream(file);
-            out = response.getOutputStream();
-
             String mime = request.getServletContext().getMimeType(file.getAbsolutePath());
             if (mime == null) {
                 mime = "application/octet-stream";
@@ -83,12 +79,10 @@ public class IncomingFileService {
             response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
             response.setHeader("Content-Length", new Long(file.length()).toString());
 
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int bytesRead = -1;
+            in = new FileInputStream(file);
+            out = response.getOutputStream();
+            IOUtils.copyLarge(in, out);
 
-            while ((bytesRead = in.read(buffer)) != -1) {
-                out.write(buffer, 0, bytesRead);
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
