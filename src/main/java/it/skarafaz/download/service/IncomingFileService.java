@@ -56,14 +56,20 @@ public class IncomingFileService {
         return new Sort(orders);
     }
 
+    public void hide(List<Long> ids) {
+        this.incomingFileRepository.hide(ids);
+    }
+
+    public void show(List<Long> ids) {
+        this.incomingFileRepository.show(ids);
+    }
+
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {
         IncomingFile incomingFile = this.incomingFileRepository.findOne(id);
 
         if (incomingFile == null) {
             throw new IncomingFileNotFoundException(id);
         }
-
-        incomingFile.setHidden(true);
 
         File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());
 

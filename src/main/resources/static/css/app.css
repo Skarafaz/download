@@ -56,12 +56,21 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
     background-image: url("../img/refresh.png");
 }
 
-.app .toolbarIcon.clipboardButtonIcon {
-    background-image: url("../img/report.png");
+.app .toolbarIcon.hideButtonIcon {
+    background-image: url("../img/hide.png");
 }
 
-.app .toolbarIcon.toggleShowHiddenButtonIcon {
-    background-image: url("../img/eye.png");
+.app .toolbarIcon.showButtonIcon {
+    background-image: url("../img/show.png");
+}
+
+.app .toolbarIcon.clipboardButtonIcon {
+    background-image: url("../img/clipboard.png");
+}
+
+.app .toolbarRight {
+    float: right;
+    margin-top: 4px;
 }
 
 .app .dgrid {

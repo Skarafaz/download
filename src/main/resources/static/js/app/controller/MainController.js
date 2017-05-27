@@ -5,6 +5,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
     return declare('app.controller.MainController', null, {
         LIST_URL : 'file/list',
         DOWNLOAD_URL : 'file/download/',
+        HIDE_URL : 'file/hide',
+        SHOW_URL : 'file/show',
         xhrManager : null,
         messagesManager : null,
         properties : null,
@@ -39,6 +41,24 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.refreshButton.startup();
             this.toolbar.addChild(this.refreshButton);
 
+            this.hideButton = new Button({
+                iconClass : 'toolbarIcon hideButtonIcon',
+                label : this.messagesManager.get('main.toolbar.hide'),
+                onClick : lang.hitch(this, this.onHideButtonClick),
+                disabled : true
+            });
+            this.hideButton.startup();
+            this.toolbar.addChild(this.hideButton);
+
+            this.showButton = new Button({
+                iconClass : 'toolbarIcon showButtonIcon',
+                label : this.messagesManager.get('main.toolbar.show'),
+                onClick : lang.hitch(this, this.onShowButtonClick),
+                disabled : true
+            });
+            this.showButton.startup();
+            this.toolbar.addChild(this.showButton);
+
             this.clipboardButton = new Button({
                 iconClass : 'toolbarIcon clipboardButtonIcon',
                 label : this.messagesManager.get('main.toolbar.clipboard'),
@@ -52,7 +72,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
 
             this.toggleShowHiddenButton = new ToggleButton({
-                iconClass : 'toolbarIcon toggleShowHiddenButtonIcon',
+                noIcon : true,
+                'class' : 'toolbarRight',
                 label : this.messagesManager.get('main.toolbar.toggleShowHidden'),
                 checked : false,
                 onChange : lang.hitch(this, this.onToggleShowHiddenButtonChange)
@@ -111,10 +132,28 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.grid.on('dgrid-select,dgrid-deselect', lang.hitch(this, this.onGridSelectDeselect));
         },
         onGridSelectDeselect : function() {
-            this.clipboardButton.set('disabled', this.getGridSelection().length === 0);
+            var flag = this.getGridSelection().length === 0;
+
+            this.hideButton.set('disabled', flag);
+            this.showButton.set('disabled', flag);
+            this.clipboardButton.set('disabled', flag);
         },
         onRefreshButtonClick : function() {
             this.grid.refresh();
+        },
+        onHideButtonClick : function() {
+            this.xhrManager.post(this.HIDE_URL, {
+                data : this.getSelectedIds()
+            }).then(lang.hitch(this, function() {
+                this.grid.refresh();
+            }));
+        },
+        onShowButtonClick : function() {
+            this.xhrManager.post(this.SHOW_URL, {
+                data : this.getSelectedIds()
+            }).then(lang.hitch(this, function() {
+                this.grid.refresh();
+            }));
         },
         onClipboardButtonClick : function() {
             var text = '';
@@ -136,6 +175,13 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                 }
             }
             return selection;
+        },
+        getSelectedIds : function() {
+            var ids = [];
+            array.forEach(this.getGridSelection(), function(item) {
+                ids.push(item.id);
+            });
+            return ids;
         },
         createDownloadUrl : function(item) {
             return string.substitute('${base}${download}${id}?${path}', {
