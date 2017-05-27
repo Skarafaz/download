@@ -1,7 +1,9 @@
 define([ 'dojo/_base/declare', 'dojo/_base/lang', 'dijit/registry', 'dijit/form/Button', 'dijit/form/ToggleButton', 'dgrid/OnDemandGrid', 'dgrid/Keyboard',
-        'dgrid/Selection', 'dgrid/Selector', 'dstore/Request', 'dojo/string', 'dojo/aspect', 'dojo/dom-class', 'dojo/_base/array', 'Clipboard' ], //
+        'dgrid/Selection', 'dgrid/Selector', 'dstore/Request', 'dojo/string', 'dojo/aspect', 'dojo/dom-class', 'dojo/_base/array', 'Clipboard',
+        'dijit/ToolbarSeparator' ], //
 
-function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request, string, aspect, domClass, array, Clipboard) {
+function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request, string, aspect, domClass, array, Clipboard,
+        ToolbarSeparator) {
     return declare('app.controller.MainController', null, {
         LIST_URL : 'file/list',
         DOWNLOAD_URL : 'file/download/',
@@ -41,6 +43,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.refreshButton.startup();
             this.toolbar.addChild(this.refreshButton);
 
+            this.toolbar.addChild(new ToolbarSeparator());
+
             this.hideButton = new Button({
                 iconClass : 'toolbarIcon hideButtonIcon',
                 label : this.messagesManager.get('main.toolbar.hide'),
@@ -58,6 +62,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
             this.showButton.startup();
             this.toolbar.addChild(this.showButton);
+
+            this.toolbar.addChild(new ToolbarSeparator());
 
             this.clipboardButton = new Button({
                 iconClass : 'toolbarIcon clipboardButtonIcon',

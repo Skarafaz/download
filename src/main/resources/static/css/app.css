@@ -65,7 +65,7 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
 }
 
 .app .toolbarIcon.clipboardButtonIcon {
-    background-image: url("../img/clipboard.png");
+    background-image: url("../img/copy.png");
 }
 
 .app .toolbarRight {
