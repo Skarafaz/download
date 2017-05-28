@@ -40,7 +40,7 @@ public class IncomingFileService {
         if (showHidden != null && showHidden == true) {
             result = this.incomingFileRepository.findAll(new PageRequest(start / count, count, createSort(sort)));
         } else {
-            result = this.incomingFileRepository.findVisible(new PageRequest(start / count, count, createSort(sort)));
+            result = this.incomingFileRepository.findByHidden(new PageRequest(start / count, count, createSort(sort)), false);
         }
 
         return result;
@@ -52,16 +52,15 @@ public class IncomingFileService {
             String[] splitStr = str.split("-");
             orders.add(new Order(Direction.valueOf(splitStr[0]), splitStr[1]));
         }
-
         return new Sort(orders);
     }
 
     public void hide(List<Long> ids) {
-        this.incomingFileRepository.hide(ids);
+        this.incomingFileRepository.updateHidden(ids, true);
     }
 
     public void show(List<Long> ids) {
-        this.incomingFileRepository.show(ids);
+        this.incomingFileRepository.updateHidden(ids, false);
     }
 
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {

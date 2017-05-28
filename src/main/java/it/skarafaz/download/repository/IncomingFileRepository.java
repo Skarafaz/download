@@ -12,22 +12,17 @@ import it.skarafaz.download.model.entity.IncomingFile;
 
 public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long> {
 
-    @Query("from IncomingFile f where f.hidden = false")
-    Page<IncomingFile> findVisible(Pageable pageable);
+    Page<IncomingFile> findByHidden(Pageable pageable, Boolean hidden);
 
     IncomingFile findByPath(String path);
+
+    @Modifying
+    @Query("update IncomingFile set hidden = ?2 where id in ?1")
+    void updateHidden(List<Long> ids, Boolean hidden);
 
     void deleteByPath(String path);
 
     @Modifying
     @Query("delete from IncomingFile where path like ?1%")
     void deleteDirectoryChildren(String path);
-
-    @Modifying
-    @Query("update IncomingFile set hidden = true where id in ?1")
-    void hide(List<Long> ids);
-
-    @Modifying
-    @Query("update IncomingFile set hidden = false where id in ?1")
-    void show(List<Long> ids);
 }
