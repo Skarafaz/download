@@ -78,7 +78,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
 
             this.toggleShowHiddenButton = new ToggleButton({
-                noIcon : true,
+                iconClass : 'toolbarIcon toggleShowHiddenButtonOffIcon',
                 'class' : 'toolbarRight',
                 label : this.messagesManager.get('main.toolbar.toggleShowHidden'),
                 checked : false,
@@ -169,6 +169,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             return text;
         },
         onToggleShowHiddenButtonChange : function(checked) {
+            var iconClass = checked ? 'toggleShowHiddenButtonOnIcon' : 'toggleShowHiddenButtonOffIcon';
+            this.toggleShowHiddenButton.set('iconClass', 'toolbarIcon ' + iconClass);
             this.grid.set('collection', checked ? this.store.filter({
                 showHidden : true
             }) : this.store);

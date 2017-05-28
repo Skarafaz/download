@@ -68,9 +68,16 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
     background-image: url("../img/copy.png");
 }
 
+.app .toolbarIcon.toggleShowHiddenButtonOnIcon {
+    background-image: url("../img/switch_on.png");
+}
+
+.app .toolbarIcon.toggleShowHiddenButtonOffIcon {
+    background-image: url("../img/switch_off.png");
+}
+
 .app .toolbarRight {
     float: right;
-    margin-top: 4px;
 }
 
 .app .dgrid {
