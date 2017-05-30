@@ -64,10 +64,6 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
     background-image: url("../img/show.png");
 }
 
-.app .toolbarIcon.deleteButtonIcon {
-    background-image: url("../img/delete.png");
-}
-
 .app .toolbarIcon.clipboardButtonIcon {
     background-image: url("../img/copy.png");
 }

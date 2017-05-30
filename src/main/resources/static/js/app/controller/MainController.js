@@ -1,15 +1,14 @@
 define([ 'dojo/_base/declare', 'dojo/_base/lang', 'dijit/registry', 'dijit/form/Button', 'dijit/form/ToggleButton', 'dgrid/OnDemandGrid', 'dgrid/Keyboard',
         'dgrid/Selection', 'dgrid/Selector', 'dstore/Request', 'dojo/string', 'dojo/aspect', 'dojo/dom-class', 'dojo/_base/array', 'Clipboard',
-        'dijit/ToolbarSeparator', 'dijit/ConfirmDialog' ], //
+        'dijit/ToolbarSeparator' ], //
 
 function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request, string, aspect, domClass, array, Clipboard,
-        ToolbarSeparator, ConfirmDialog) {
+        ToolbarSeparator) {
     return declare('app.controller.MainController', null, {
         LIST_URL : 'file/list',
         DOWNLOAD_URL : 'file/download/',
         HIDE_URL : 'file/hide',
         SHOW_URL : 'file/show',
-        DELETE_URL : 'file/delete',
         xhrManager : null,
         messagesManager : null,
         properties : null,
@@ -19,7 +18,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         clipboardButton : null,
         clipboard : null,
         toggleShowHiddenButton : null,
-        deleteConfirmDialog : null,
         collection : null,
         grid : null,
 
@@ -28,13 +26,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         },
         init : function() {
             this.container = registry.byId('container');
-
-            this.deleteConfirmDialog = new ConfirmDialog({
-                title : this.messagesManager.get('main.deleteConfirmDialog.title'),
-                content : this.messagesManager.get('main.deleteConfirmDialog.message'),
-                style : 'width: 300px',
-                onExecute : lang.hitch(this, this.onDeleteConfirm)
-            });
 
             this.initToolbar();
             this.initGrid();
@@ -71,15 +62,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
             this.showButton.startup();
             this.toolbar.addChild(this.showButton);
-
-            this.deleteButton = new Button({
-                iconClass : 'toolbarIcon deleteButtonIcon',
-                label : this.messagesManager.get('main.toolbar.delete'),
-                onClick : lang.hitch(this, this.onDeleteButtonClick),
-                disabled : true
-            });
-            this.deleteButton.startup();
-            this.toolbar.addChild(this.deleteButton);
 
             this.toolbar.addChild(new ToolbarSeparator());
 
@@ -162,7 +144,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
 
             this.hideButton.set('disabled', flag);
             this.showButton.set('disabled', flag);
-            this.deleteButton.set('disabled', flag);
             this.clipboardButton.set('disabled', flag);
         },
         onRefreshButtonClick : function() {
@@ -177,16 +158,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         },
         onShowButtonClick : function() {
             this.xhrManager.post(this.SHOW_URL, {
-                data : this.getSelectedIds()
-            }).then(lang.hitch(this, function() {
-                this.grid.refresh();
-            }));
-        },
-        onDeleteButtonClick : function() {
-            this.deleteConfirmDialog.show();
-        },
-        onDeleteConfirm : function() {
-            this.xhrManager.post(this.DELETE_URL, {
                 data : this.getSelectedIds()
             }).then(lang.hitch(this, function() {
                 this.grid.refresh();
