@@ -27,7 +27,7 @@ public class EmbeddedServletContainerConfiguration {
 
     private Connector getAjpConnector() {
         Connector connector = new Connector(AJP_PROTOCOL);
-        connector.setPort(ajpPort);
+        connector.setPort(this.ajpPort);
 
         return connector;
     }

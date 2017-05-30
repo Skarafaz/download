@@ -60,7 +60,7 @@ public class AppProperties {
 
     @JsonIgnore
     public Path getWatchDirectoryAsPath() {
-        return Paths.get(watchDirectory);
+        return Paths.get(this.watchDirectory);
     }
 
     @JsonIgnore

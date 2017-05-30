@@ -5,11 +5,15 @@ function(ready, parser, window, BorderContainer, Toolbar, ContentPane, MainContr
     ready(function() {
         parser.parse(window.body());
 
+        _global.objects.xhrManager = new XhrManager();
+
+        _global.objects.messagesManager = new MessagesManager({
+            messages : _global.messages
+        });
+
         _global.objects.mainCtrl = new MainController({
-            xhrManager : new XhrManager(),
-            messagesManager : new MessagesManager({
-                messages : _global.messages
-            }),
+            xhrManager : _global.objects.xhrManager,
+            messagesManager : _global.objects.messagesManager,
             properties : _global.properties
         });
 

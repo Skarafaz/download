@@ -9,17 +9,23 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         DOWNLOAD_URL : 'file/download/',
         HIDE_URL : 'file/hide',
         SHOW_URL : 'file/show',
+
+        properties : null,
         xhrManager : null,
         messagesManager : null,
-        properties : null,
+
         container : null,
+
         toolbar : null,
         refreshButton : null,
+        hideButton : null,
+        showButton : null,
         clipboardButton : null,
         clipboard : null,
         toggleShowHiddenButton : null,
-        collection : null,
+
         grid : null,
+        collection : null,
 
         constructor : function(args) {
             lang.mixin(this, args);
@@ -88,8 +94,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.toolbar.addChild(this.toggleShowHiddenButton);
         },
         initGrid : function() {
-            var CustomGrid = declare([ OnDemandGrid, Keyboard, Selection, Selector ]);
-
             this.collection = new Request({
                 target : this.LIST_URL,
                 sortParam : 'sort',
@@ -98,6 +102,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                 ascendingPrefix : 'ASC-',
                 descendingPrefix : 'DESC-'
             });
+
+            var CustomGrid = declare([ OnDemandGrid, Keyboard, Selection, Selector ]);
 
             this.grid = new CustomGrid({
                 collection : this.collection.filter({

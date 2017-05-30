@@ -15,10 +15,10 @@ public class Sort {
     }
 
     public String getProperty() {
-        return property;
+        return this.property;
     }
 
     public Direction getDirection() {
-        return direction;
+        return this.direction;
     }
 }
