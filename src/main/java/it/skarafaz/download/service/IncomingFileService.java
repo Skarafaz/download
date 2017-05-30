@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,16 +17,13 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.skarafaz.download.configuration.AppProperties;
 import it.skarafaz.download.exception.IncomingFileNotFoundException;
+import it.skarafaz.download.model.OnDemandListResponse;
+import it.skarafaz.download.model.Sort;
 import it.skarafaz.download.model.entity.IncomingFile;
 import it.skarafaz.download.repository.IncomingFileRepository;
 
@@ -40,25 +36,9 @@ public class IncomingFileService {
     @Autowired
     private AppProperties appProperties;
 
-    public Page<IncomingFile> list(Boolean showHidden, String[] sort, int start, int count) {
-        Page<IncomingFile> result = null;
-
-        if (showHidden != null && showHidden == true) {
-            result = this.incomingFileRepository.findAll(new PageRequest(start / count, count, createSort(sort)));
-        } else {
-            result = this.incomingFileRepository.findByHidden(new PageRequest(start / count, count, createSort(sort)), false);
-        }
-
-        return result;
-    }
-
-    private Sort createSort(String[] sort) {
-        List<Order> orders = new ArrayList<>();
-        for (String str : sort) {
-            String[] splitStr = str.split("-");
-            orders.add(new Order(Direction.valueOf(splitStr[0]), splitStr[1]));
-        }
-        return new Sort(orders);
+    public OnDemandListResponse<IncomingFile> list(Integer start, Integer count, String sort, Boolean showHidden) {
+        return new OnDemandListResponse<>(this.incomingFileRepository.list(start, count, new Sort(sort), showHidden),
+                this.incomingFileRepository.count(showHidden));
     }
 
     public void hide(List<Long> ids) {

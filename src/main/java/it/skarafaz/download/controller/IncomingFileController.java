@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import it.skarafaz.download.model.IncomingFileListResponse;
+import it.skarafaz.download.model.OnDemandListResponse;
+import it.skarafaz.download.model.entity.IncomingFile;
 import it.skarafaz.download.service.IncomingFileService;
 
 @Controller
@@ -25,9 +26,9 @@ public class IncomingFileController {
     private IncomingFileService incomingFileService;
 
     @GetMapping("/list")
-    public @ResponseBody IncomingFileListResponse list(@RequestParam(required = false) Boolean showHidden,
-            @RequestParam String[] sort, @RequestParam int start, @RequestParam int count) {
-        return new IncomingFileListResponse(this.incomingFileService.list(showHidden, sort, start, count));
+    public @ResponseBody OnDemandListResponse<IncomingFile> list(@RequestParam Integer start, @RequestParam Integer count, @RequestParam String sort,
+            @RequestParam Boolean showHidden) {
+        return this.incomingFileService.list(start, count, sort, showHidden);
     }
 
     @PostMapping("/hide")

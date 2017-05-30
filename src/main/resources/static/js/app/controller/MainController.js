@@ -19,8 +19,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         clipboardButton : null,
         clipboard : null,
         toggleShowHiddenButton : null,
-        deleteCOnfirmDialog : null,
-        store : null,
+        deleteConfirmDialog : null,
+        collection : null,
         grid : null,
 
         constructor : function(args) {
@@ -108,7 +108,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         initGrid : function() {
             var CustomGrid = declare([ OnDemandGrid, Keyboard, Selection, Selector ]);
 
-            this.store = new Request({
+            this.collection = new Request({
                 target : this.LIST_URL,
                 sortParam : 'sort',
                 rangeStartParam : 'start',
@@ -118,7 +118,9 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
 
             this.grid = new CustomGrid({
-                collection : this.store,
+                collection : this.collection.filter({
+                    showHidden : false
+                }),
                 columns : [ {
                     field : 'selector',
                     selector : 'checkbox'
@@ -200,9 +202,9 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         onToggleShowHiddenButtonChange : function(checked) {
             var iconClass = checked ? 'toggleShowHiddenButtonOnIcon' : 'toggleShowHiddenButtonOffIcon';
             this.toggleShowHiddenButton.set('iconClass', 'toolbarIcon ' + iconClass);
-            this.grid.set('collection', checked ? this.store.filter({
-                showHidden : true
-            }) : this.store);
+            this.grid.set('collection', this.collection.filter({
+                showHidden : checked
+            }));
         },
         getGridSelection : function() {
             var selection = [];
