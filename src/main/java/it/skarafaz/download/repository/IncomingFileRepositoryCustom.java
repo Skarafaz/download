@@ -10,4 +10,6 @@ public interface IncomingFileRepositoryCustom {
     Long count(Boolean showHidden);
 
     List<IncomingFile> list(Integer start, Integer count, Sort sort, Boolean showHidden);
+
+    void clear();
 }

@@ -41,4 +41,9 @@ public class IncomingFileRepositoryImpl implements IncomingFileRepositoryCustom 
 
         return query.getResultList();
     }
+
+    @Override
+    public void clear() {
+        this.entityManager.clear();
+    }
 }

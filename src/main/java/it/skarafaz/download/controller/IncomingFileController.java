@@ -43,6 +43,12 @@ public class IncomingFileController {
         return true;
     }
 
+    @PostMapping("/delete")
+    public @ResponseBody Boolean delete(@RequestBody List<Long> ids) {
+        this.incomingFileService.delete(ids);
+        return true;
+    }
+
     @GetMapping("/download/{id}")
     public void download(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
         this.incomingFileService.download(id, request, response);

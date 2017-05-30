@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,7 @@ import it.skarafaz.download.repository.IncomingFileRepository;
 @Service
 @Transactional
 public class IncomingFileService {
+    private static final Logger logger = LoggerFactory.getLogger(IncomingFileService.class);
     @Autowired
     private IncomingFileRepository incomingFileRepository;
     @Autowired
@@ -41,6 +46,23 @@ public class IncomingFileService {
 
     public void show(List<Long> ids) {
         this.incomingFileRepository.updateHidden(ids, false);
+    }
+
+    public void delete(List<Long> ids) {
+        List<IncomingFile> incomingFiles = this.incomingFileRepository.findAll(ids);
+        this.incomingFileRepository.clear();
+
+        for (IncomingFile incomingFile : incomingFiles) {
+            Path path = this.appProperties.getWatchDirectoryAsPath().resolve(incomingFile.getPath());
+
+            try {
+                if (Files.deleteIfExists(path)) {
+                    this.incomingFileRepository.deleteById(incomingFile.getId());
+                }
+            } catch (IOException e) {
+                logger.warn("Cannot delete file: {}", path);
+            }
+        }
     }
 
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {

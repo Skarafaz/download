@@ -76,7 +76,7 @@ public class FileSystemMonitorService implements ApplicationRunner, OnCreateList
 
         logger.debug("Deleting obsolete incoming files related to path: {}", relativePath);
         this.incomingFileRepository.deleteByPath(relativePath.toString());
-        this.incomingFileRepository.deleteDirectoryChildren(relativePath.toString() + File.separator);
+        this.incomingFileRepository.deletePathContent(relativePath.toString() + File.separator);
     }
 
     private Path relativize(Path path) {

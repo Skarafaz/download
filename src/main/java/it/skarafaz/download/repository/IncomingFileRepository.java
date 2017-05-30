@@ -18,6 +18,10 @@ public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long
     void deleteByPath(String path);
 
     @Modifying
+    @Query("delete from IncomingFile where id = ?1")
+    void deleteById(Long id);
+
+    @Modifying
     @Query("delete from IncomingFile where path like ?1%")
-    void deleteDirectoryChildren(String path);
+    void deletePathContent(String path);
 }
