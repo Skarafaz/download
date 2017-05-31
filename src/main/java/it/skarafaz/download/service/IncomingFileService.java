@@ -35,9 +35,9 @@ public class IncomingFileService {
     @Autowired
     private AppProperties appProperties;
 
-    public OnDemandListResponse<IncomingFile> list(Integer start, Integer count, String sort, Boolean showHidden) {
-        return new OnDemandListResponse<>(this.incomingFileRepository.list(start, count, new Sort(sort), showHidden),
-                this.incomingFileRepository.count(showHidden));
+    public OnDemandListResponse<IncomingFile> list(Integer start, Integer count, String sort, Boolean showHidden, String search) {
+        return new OnDemandListResponse<>(this.incomingFileRepository.list(start, count, new Sort(sort), showHidden, search),
+                this.incomingFileRepository.count(showHidden, search));
     }
 
     public void hide(List<Long> ids) {

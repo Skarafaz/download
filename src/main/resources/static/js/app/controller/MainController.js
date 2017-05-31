@@ -1,15 +1,16 @@
 define([ 'dojo/_base/declare', 'dojo/_base/lang', 'dijit/registry', 'dijit/form/Button', 'dijit/form/ToggleButton', 'dgrid/OnDemandGrid', 'dgrid/Keyboard',
         'dgrid/Selection', 'dgrid/Selector', 'dstore/Request', 'dojo/string', 'dojo/aspect', 'dojo/dom-class', 'dojo/_base/array', 'Clipboard',
-        'dijit/ToolbarSeparator' ], //
+        'dijit/ToolbarSeparator', 'dijit/form/TextBox' ], //
 
 function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request, string, aspect, domClass, array, Clipboard,
-        ToolbarSeparator) {
+        ToolbarSeparator, TextBox) {
     return declare('app.controller.MainController', null, {
         LIST_URL : 'file/list',
         HIDE_URL : 'file/hide',
         SHOW_URL : 'file/show',
         DELETE_URL : 'file/delete',
         DOWNLOAD_URL : 'file/download/',
+        KEY_UP_TIMEOUT : 300,
 
         properties : null,
         xhrManager : null,
@@ -25,6 +26,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         clipboardButton : null,
         clipboard : null,
         toggleShowHiddenButton : null,
+        searchTextBox : null,
 
         grid : null,
         collection : null,
@@ -94,6 +96,19 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                 text : lang.hitch(this, this.onClipboardButtonClick)
             });
 
+            this.searchTextBox = new TextBox({
+                'class': 'toolbarRight',
+                placeHolder : this.messagesManager.get('main.toolbar.search'),
+                onKeyUp : lang.hitch(this, this.onSearchTextBoxKeyUp),
+                style : 'margin: 4px'
+            });
+            this.toolbar.addChild(this.searchTextBox);
+
+            this.toolbar.addChild(new ToolbarSeparator({
+                'class' : 'toolbarRight',
+                'style' : 'margin-top: 6px'
+            }));
+
             this.toggleShowHiddenButton = new ToggleButton({
                 iconClass : 'toolbarIcon toggleShowHiddenButtonOffIcon',
                 'class' : 'toolbarRight',
@@ -117,9 +132,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             var CustomGrid = declare([ OnDemandGrid, Keyboard, Selection, Selector ]);
 
             this.grid = new CustomGrid({
-                collection : this.collection.filter({
-                    showHidden : false
-                }),
+                collection : this.getFilteredCollection(),
                 columns : [ {
                     field : 'selector',
                     selector : 'checkbox'
@@ -204,9 +217,19 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         onToggleShowHiddenButtonChange : function(checked) {
             var iconClass = checked ? 'toggleShowHiddenButtonOnIcon' : 'toggleShowHiddenButtonOffIcon';
             this.toggleShowHiddenButton.set('iconClass', 'toolbarIcon ' + iconClass);
-            this.grid.set('collection', this.collection.filter({
-                showHidden : checked
-            }));
+            this.grid.set('collection', this.getFilteredCollection());
+        },
+        onSearchTextBoxKeyUp : function() {
+            clearTimeout(this.kyeUpHandle);
+            this.kyeUpHandle = setTimeout(lang.hitch(this, function() {
+                this.grid.set('collection', this.getFilteredCollection());
+            }), this.KEY_UP_TIMEOUT);
+        },
+        getFilteredCollection : function() {
+            return this.collection.filter({
+                showHidden : this.toggleShowHiddenButton.get('checked'),
+                search : this.searchTextBox.get('value')
+            });
         },
         getGridSelection : function() {
             var selection = [];

@@ -27,8 +27,8 @@ public class IncomingFileController {
 
     @GetMapping("/list")
     public @ResponseBody OnDemandListResponse<IncomingFile> list(@RequestParam Integer start, @RequestParam Integer count, @RequestParam String sort,
-            @RequestParam Boolean showHidden) {
-        return this.incomingFileService.list(start, count, sort, showHidden);
+            @RequestParam Boolean showHidden, @RequestParam String search) {
+        return this.incomingFileService.list(start, count, sort, showHidden, search);
     }
 
     @PostMapping("/hide")

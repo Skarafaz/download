@@ -14,12 +14,13 @@ public class IncomingFileRepositoryImpl implements IncomingFileRepositoryCustom 
     private EntityManager entityManager;
 
     @Override
-    public Long count(Boolean showHidden) {
+    public Long count(Boolean showHidden, String search) {
         StringBuilder hql = new StringBuilder();
         hql.append("select count(id) ");
         hql.append("from IncomingFile ");
+        hql.append(String.format("where path like '%%%s%%'", search));
         if (showHidden == false) {
-            hql.append("where hidden = false");
+            hql.append(" and hidden = false");
         }
 
         return (Long) this.entityManager.createQuery(hql.toString()).getSingleResult();
@@ -27,13 +28,14 @@ public class IncomingFileRepositoryImpl implements IncomingFileRepositoryCustom 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<IncomingFile> list(Integer start, Integer count, Sort sort, Boolean showHidden) {
+    public List<IncomingFile> list(Integer start, Integer count, Sort sort, Boolean showHidden, String search) {
         StringBuilder hql = new StringBuilder();
         hql.append("from IncomingFile ");
+        hql.append(String.format("where path like '%%%s%%'", search));
         if (showHidden == false) {
-            hql.append("where hidden = false ");
+            hql.append(" and hidden = false ");
         }
-        hql.append(String.format("order by %s %s", sort.getProperty(), sort.getDirection()));
+        hql.append(String.format(" order by %s %s", sort.getProperty(), sort.getDirection()));
 
         Query query = this.entityManager.createQuery(hql.toString());
         query.setFirstResult(start);
