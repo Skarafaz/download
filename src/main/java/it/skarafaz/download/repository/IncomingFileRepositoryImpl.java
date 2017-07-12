@@ -18,7 +18,7 @@ public class IncomingFileRepositoryImpl implements IncomingFileRepositoryCustom 
         StringBuilder hql = new StringBuilder();
         hql.append("select count(id) ");
         hql.append("from IncomingFile ");
-        hql.append(String.format("where path like '%%%s%%'", search));
+        hql.append(String.format("where lower(path) like lower('%%%s%%')", search));
         if (showHidden == false) {
             hql.append(" and hidden = false");
         }
@@ -31,7 +31,7 @@ public class IncomingFileRepositoryImpl implements IncomingFileRepositoryCustom 
     public List<IncomingFile> list(Integer start, Integer count, Sort sort, Boolean showHidden, String search) {
         StringBuilder hql = new StringBuilder();
         hql.append("from IncomingFile ");
-        hql.append(String.format("where path like '%%%s%%'", search));
+        hql.append(String.format("where lower(path) like lower('%%%s%%')", search));
         if (showHidden == false) {
             hql.append(" and hidden = false ");
         }
