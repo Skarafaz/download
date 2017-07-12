@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +27,6 @@ import it.skarafaz.download.repository.IncomingFileRepository;
 @Service
 @Transactional
 public class IncomingFileService {
-    private static final Logger logger = LoggerFactory.getLogger(IncomingFileService.class);
     @Autowired
     private IncomingFileRepository incomingFileRepository;
     @Autowired
@@ -56,12 +53,12 @@ public class IncomingFileService {
             Path path = this.appProperties.getWatchDirectoryAsPath().resolve(incomingFile.getPath());
 
             try {
-                if (Files.deleteIfExists(path)) {
-                    this.incomingFileRepository.deleteById(incomingFile.getId());
-                }
+                Files.deleteIfExists(path);
             } catch (IOException e) {
-                logger.warn("Cannot delete file: {}", path);
+                throw new RuntimeException(e);
             }
+
+            this.incomingFileRepository.deleteById(incomingFile.getId());
         }
     }
 
