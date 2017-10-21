@@ -46,6 +46,7 @@
         <div id="toolbar" data-dojo-type="dijit/Toolbar" data-dojo-props="region:'top'"></div>
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" class="noPadding">
             <div id="grid"></div>
+            <div id="counter" style="display: none;"></div>
         </div>
     </div>
 </body>

@@ -1,9 +1,9 @@
 define([ 'dojo/_base/declare', 'dojo/_base/lang', 'dijit/registry', 'dijit/form/Button', 'dijit/form/ToggleButton', 'dgrid/OnDemandGrid', 'dgrid/Keyboard',
         'dgrid/Selection', 'dgrid/Selector', 'dstore/Request', 'dojo/string', 'dojo/aspect', 'dojo/dom-class', 'dojo/_base/array', 'Clipboard',
-        'dijit/ToolbarSeparator', 'dijit/form/TextBox' ], //
+        'dijit/ToolbarSeparator', 'dijit/form/TextBox', 'dojo/dom', 'dojo/dom-style', 'dojo/html' ], //
 
 function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, Selection, Selector, Request, string, aspect, domClass, array, Clipboard,
-        ToolbarSeparator, TextBox) {
+        ToolbarSeparator, TextBox, dom, domStyle, html) {
     return declare('app.controller.MainController', null, {
         LIST_URL : 'file/list',
         HIDE_URL : 'file/hide',
@@ -25,6 +25,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         clipboard : null,
         toggleShowHiddenButton : null,
         searchTextBox : null,
+        counter : null,
 
         grid : null,
         collection : null,
@@ -37,6 +38,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
 
             this.initToolbar();
             this.initGrid();
+
+            this.counter = dom.byId('counter');
 
             this.container.layout();
         },
@@ -160,11 +163,18 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.grid.on('dgrid-select,dgrid-deselect', lang.hitch(this, this.onGridSelectDeselect));
         },
         onGridSelectDeselect : function() {
-            var flag = this.getGridSelection().length === 0;
+            var selected = this.getGridSelection().length;
 
-            this.hideButton.set('disabled', flag);
-            this.showButton.set('disabled', flag);
-            this.clipboardButton.set('disabled', flag);
+            if (selected > 0) {
+                html.set(this.counter, selected);
+                domStyle.set(this.counter, 'display', '');
+            } else {
+                domStyle.set(this.counter, 'display', 'none');
+            }
+
+            this.hideButton.set('disabled', selected === 0);
+            this.showButton.set('disabled', selected === 0);
+            this.clipboardButton.set('disabled', selected === 0);
         },
         onRefreshButtonClick : function() {
             this.grid.refresh();
