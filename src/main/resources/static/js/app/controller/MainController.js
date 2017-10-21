@@ -135,7 +135,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                         return string.substitute('<a href="${url}"><i class="fa fa-download" aria-hidden="true"></i></a>', {
                             url : this.createDownloadUrl(item)
                         });
-                    })
+                    }),
+                    sortable : false
                 }, {
                     field : 'id',
                     label : this.messagesManager.get('main.grid.id')
