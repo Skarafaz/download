@@ -185,8 +185,12 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         },
         onClipboardButtonClick : function() {
             var text = '';
-            array.forEach(this.getGridSelection(), function(item) {
-                text += this.createDownloadUrl(item) + '\n';
+            var selection = this.getGridSelection();
+            array.forEach(selection, function(item, index) {
+                text += this.createDownloadUrl(item);
+                if (index != selection.length - 1) {
+                    text += '\n';
+                }
             }, this);
             return text;
         },
