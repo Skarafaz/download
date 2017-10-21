@@ -12,6 +12,8 @@ public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long
 
     IncomingFile findByPath(String path);
 
+    List<IncomingFile> findByDownloaded(Boolean downloaded);
+
     @Modifying
     @Query("update IncomingFile set hidden = ?2 where id in ?1")
     void updateHidden(List<Long> ids, Boolean hidden);

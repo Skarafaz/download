@@ -75,6 +75,40 @@ public class IncomingFileService {
         } finally {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(out);
+
+            incomingFile.setDownloaded(true);
+        }
+    }
+
+    public void links(HttpServletResponse response) {
+        List<IncomingFile> incomingFiles = this.incomingFileRepository.findByDownloaded(false);
+
+        String content = "";
+        for (int i = 0; i < incomingFiles.size(); i++) {
+            IncomingFile incomingFile = incomingFiles.get(i);
+
+            content += String.format("%sfile/download/%d?%s", appProperties.getUrl(), incomingFile.getId(), incomingFile.getPath());
+
+            if (i != incomingFiles.size() - 1) {
+                content += "\n";
+            }
+        }
+
+        response.setContentType("text/plain");
+        response.setHeader("Content-Disposition", "attachment; filename=\"links.txt\"");
+        response.setHeader("Content-Length", new Long(content.length()).toString());
+
+        OutputStream out = null;
+
+        try {
+            out = response.getOutputStream();
+            IOUtils.write(content, out, "UTF-8");
+        } catch (ClientAbortException e) {
+            // ignore
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(out);
         }
     }
 }

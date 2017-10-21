@@ -16,6 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class IncomingFile {
     private Long id;
     private String path;
+    private Boolean downloaded = false;
     private Boolean hidden = false;
 
     public IncomingFile() {
@@ -44,6 +45,16 @@ public class IncomingFile {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    @NotNull
+    @Column(nullable = false)
+    public Boolean getDownloaded() {
+        return this.downloaded;
+    }
+
+    public void setDownloaded(Boolean downloaded) {
+        this.downloaded = downloaded;
     }
 
     @NotNull

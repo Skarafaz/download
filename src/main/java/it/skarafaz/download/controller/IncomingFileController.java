@@ -47,4 +47,9 @@ public class IncomingFileController {
     public void download(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
         this.incomingFileService.download(id, request, response);
     }
+
+    @GetMapping("/links")
+    public void links(HttpServletResponse response) {
+        this.incomingFileService.links(response);
+    }
 }

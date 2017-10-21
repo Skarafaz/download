@@ -1,0 +1,1 @@
+alter table incoming_file add column downloaded boolean not null default false;
