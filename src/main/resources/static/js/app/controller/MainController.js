@@ -8,14 +8,12 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         LIST_URL : 'file/list',
         HIDE_URL : 'file/hide',
         SHOW_URL : 'file/show',
-        DELETE_URL : 'file/delete',
         DOWNLOAD_URL : 'file/download/',
         KEY_UP_TIMEOUT : 300,
 
         properties : null,
         xhrManager : null,
         messagesManager : null,
-        confirmDialog : null,
 
         container : null,
 
@@ -72,15 +70,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
             this.showButton.startup();
             this.toolbar.addChild(this.showButton);
-
-            this.deleteButton = new Button({
-                iconClass : 'toolbarIcon deleteButtonIcon',
-                label : this.messagesManager.get('main.toolbar.delete'),
-                onClick : lang.hitch(this, this.onDeleteButtonClick),
-                disabled : true
-            });
-            this.deleteButton.startup();
-            this.toolbar.addChild(this.deleteButton);
 
             this.toolbar.addChild(new ToolbarSeparator());
 
@@ -174,7 +163,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
 
             this.hideButton.set('disabled', flag);
             this.showButton.set('disabled', flag);
-            this.deleteButton.set('disabled', flag);
             this.clipboardButton.set('disabled', flag);
         },
         onRefreshButtonClick : function() {
@@ -189,19 +177,6 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         },
         onShowButtonClick : function() {
             this.xhrManager.post(this.SHOW_URL, {
-                data : this.getSelectedIds()
-            }).then(lang.hitch(this, function() {
-                this.grid.refresh();
-            }));
-        },
-        onDeleteButtonClick : function() {
-            var title = this.messagesManager.get('main.toolbar.delete');
-            var content = this.messagesManager.get('main.toolbar.delete.confirm');
-
-            this.confirmDialog.show(title, content, lang.hitch(this, this.onDeleteConfirm));
-        },
-        onDeleteConfirm : function() {
-            this.xhrManager.post(this.DELETE_URL, {
                 data : this.getSelectedIds()
             }).then(lang.hitch(this, function() {
                 this.grid.refresh();

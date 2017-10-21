@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import it.skarafaz.download.model.entity.IncomingFile;
 
 public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long>, IncomingFileRepositoryCustom {
+
     IncomingFile findByPath(String path);
 
     @Modifying
@@ -16,10 +17,6 @@ public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long
     void updateHidden(List<Long> ids, Boolean hidden);
 
     void deleteByPath(String path);
-
-    @Modifying
-    @Query("delete from IncomingFile where id = ?1")
-    void deleteById(Long id);
 
     @Modifying
     @Query("delete from IncomingFile where path like ?1%")

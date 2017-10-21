@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,23 +41,6 @@ public class IncomingFileService {
 
     public void show(List<Long> ids) {
         this.incomingFileRepository.updateHidden(ids, false);
-    }
-
-    public void delete(List<Long> ids) {
-        List<IncomingFile> incomingFiles = this.incomingFileRepository.findAll(ids);
-        this.incomingFileRepository.clear();
-
-        for (IncomingFile incomingFile : incomingFiles) {
-            Path path = this.appProperties.getWatchDirectoryAsPath().resolve(incomingFile.getPath());
-
-            try {
-                Files.deleteIfExists(path);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            this.incomingFileRepository.deleteById(incomingFile.getId());
-        }
     }
 
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {
