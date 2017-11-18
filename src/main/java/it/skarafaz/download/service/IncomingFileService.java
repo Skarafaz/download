@@ -75,13 +75,13 @@ public class IncomingFileService {
         } finally {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(out);
-
-            incomingFile.setDownloaded(true);
         }
+
+        incomingFile.setFeed(false);
     }
 
-    public void links(HttpServletResponse response) {
-        List<IncomingFile> incomingFiles = this.incomingFileRepository.findByDownloaded(false);
+    public void feed(HttpServletResponse response) {
+        List<IncomingFile> incomingFiles = this.incomingFileRepository.findByFeed(true);
 
         String content = "";
         for (int i = 0; i < incomingFiles.size(); i++) {
@@ -95,7 +95,7 @@ public class IncomingFileService {
         }
 
         response.setContentType("text/plain");
-        response.setHeader("Content-Disposition", "attachment; filename=\"links.txt\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"feed.txt\"");
         response.setHeader("Content-Length", new Long(content.length()).toString());
 
         OutputStream out = null;

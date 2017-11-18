@@ -12,7 +12,7 @@ public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long
 
     IncomingFile findByPath(String path);
 
-    List<IncomingFile> findByDownloaded(Boolean downloaded);
+    List<IncomingFile> findByFeed(Boolean feed);
 
     @Modifying
     @Query("update IncomingFile set hidden = ?2 where id in ?1")

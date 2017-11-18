@@ -48,8 +48,8 @@ public class IncomingFileController {
         this.incomingFileService.download(id, request, response);
     }
 
-    @GetMapping("/links")
-    public void links(HttpServletResponse response) {
-        this.incomingFileService.links(response);
+    @GetMapping("/feed")
+    public void feed(HttpServletResponse response) {
+        this.incomingFileService.feed(response);
     }
 }
