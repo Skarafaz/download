@@ -2,28 +2,37 @@ package it.skarafaz.download.service;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DirectoryWatcher implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(DirectoryWatcher.class);
+
+    // @formatter:off
+    private static final Kind<?>[] events = {
+        StandardWatchEventKinds.ENTRY_CREATE,
+        StandardWatchEventKinds.ENTRY_MODIFY,
+        StandardWatchEventKinds.ENTRY_DELETE,
+        StandardWatchEventKinds.OVERFLOW
+    };
+    // @formatter:on
+
     private final Path root;
     private final WatchService watcher;
-    private final Map<WatchKey, Path> keys;
+    private final Map<WatchKey, Path> paths;
+
     private OnCreateListener onCreateListener;
     private OnModifyListener onModifyListener;
     private OnDeleteListener onDeleteListener;
@@ -32,7 +41,7 @@ public class DirectoryWatcher implements Runnable {
     public DirectoryWatcher(Path root) throws IOException {
         this.root = root;
         this.watcher = FileSystems.getDefault().newWatchService();
-        this.keys = new HashMap<WatchKey, Path>();
+        this.paths = new HashMap<>();
 
         registerAll(this.root);
     }
@@ -68,7 +77,7 @@ public class DirectoryWatcher implements Runnable {
                 return;
             }
 
-            Path dir = keys.get(key);
+            Path dir = paths.get(key);
             if (dir == null) {
                 logger.warn("Watch key not recognized");
                 continue;
@@ -81,7 +90,7 @@ public class DirectoryWatcher implements Runnable {
 
                 if (kind.equals(StandardWatchEventKinds.OVERFLOW)) {
                     if (this.onOverflowListener != null) {
-                        this.onOverflowListener.onOverflow();
+                        this.onOverflowListener.onOverflow(event.context());
                     }
                     continue;
                 }
@@ -92,13 +101,8 @@ public class DirectoryWatcher implements Runnable {
                     if (this.onCreateListener != null) {
                         this.onCreateListener.onCreate(path);
                     }
-                    if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
-                        try {
-                            registerAll(path);
-                        } catch (IOException e) {
-                            logger.error("Cannot register directory: {}", path);
-                            logger.error("{}: {}", e.getClass().getName(), e.getMessage());
-                        }
+                    if (Files.isDirectory(path)) {
+                        registerAll(path);
                     }
                 } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
                     if (this.onModifyListener != null) {
@@ -112,11 +116,11 @@ public class DirectoryWatcher implements Runnable {
             }
 
             if (!key.reset()) {
-                logger.debug("Watch key for {} is no longer valid, unregistering directory", keys.get(key));
+                logger.debug("Watch key for {} is no longer valid, unregistering directory", paths.get(key));
 
-                this.keys.remove(key);
+                this.paths.remove(key);
 
-                if (this.keys.isEmpty()) {
+                if (this.paths.isEmpty()) {
                     logger.warn("Stopping watcher, no valid watch keys left");
                     break;
                 }
@@ -124,20 +128,24 @@ public class DirectoryWatcher implements Runnable {
         }
     }
 
-    private void registerAll(Path root) throws IOException {
-        Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                register(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+    private void registerAll(Path root) {
+        try (Stream<Path> paths = Files.walk(root, FileVisitOption.FOLLOW_LINKS)) {
+            paths.filter(p -> Files.isDirectory(p)).forEach(this::register);
+        } catch (IOException e) {
+            logger.error("Cannot register directory tree with root: {}", root);
+            logger.error("{}: {}", e.getClass().getName(), e.getMessage());
+        }
     }
 
-    private void register(Path dir) throws IOException {
+    private void register(Path dir) {
         logger.debug("Registering directory: {}", dir);
-        keys.put(dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY,
-                StandardWatchEventKinds.ENTRY_DELETE), dir);
+
+        try {
+            this.paths.put(dir.register(watcher, events), dir);
+        } catch (IOException e) {
+            logger.error("Cannot register directory: {}", dir);
+            logger.error("{}: {}", e.getClass().getName(), e.getMessage());
+        }
     }
 
     public interface OnCreateListener {
@@ -157,6 +165,6 @@ public class DirectoryWatcher implements Runnable {
 
     public interface OnOverflowListener {
 
-        public void onOverflow();
+        public void onOverflow(Object context);
     }
 }

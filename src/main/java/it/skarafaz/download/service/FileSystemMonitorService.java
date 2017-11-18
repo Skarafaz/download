@@ -2,8 +2,8 @@ package it.skarafaz.download.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
@@ -39,6 +39,8 @@ public class FileSystemMonitorService implements ApplicationRunner, OnCreateList
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        sync();
+
         DirectoryWatcher watcher = new DirectoryWatcher(this.appProperties.getWatchDirectoryAsPath());
         watcher.setOnCreateListener(this.proxy);
         watcher.setOnDeleteListener(this.proxy);
@@ -46,27 +48,44 @@ public class FileSystemMonitorService implements ApplicationRunner, OnCreateList
         this.taskExecutor.execute(watcher);
     }
 
+    private void sync() {
+        for (IncomingFile incomingFile : this.incomingFileRepository.findAll()) {
+            File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());
+
+            if (!file.canRead()) {
+                logger.debug("Deleting obsolete incoming file: {}", incomingFile.getPath());
+                this.incomingFileRepository.delete(incomingFile);
+            }
+        }
+
+        saveAll(this.appProperties.getWatchDirectoryAsPath());
+    }
+
     @Override
     public void onCreate(Path path) {
-        if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
-            try (Stream<Path> paths = Files.walk(path)) {
-                paths.filter(p -> !p.getFileName().toString().startsWith(".")
-                        && Files.isDirectory(p, LinkOption.NOFOLLOW_LINKS) == false).forEach(this::saveIncomingFile);
-            } catch (IOException e) {
-                logger.error("I/O Error");
-                logger.error("{}: {}", e.getClass().getName(), e.getMessage());
-            }
-        } else if (!path.getFileName().toString().startsWith(".")) {
-            saveIncomingFile(path);
+        if (Files.isDirectory(path)) {
+            saveAll(path);
+        } else {
+            save(path);
         }
     }
 
-    private void saveIncomingFile(Path path) {
-        Path relativePath = relativize(path);
+    private void saveAll(Path dir) {
+        try (Stream<Path> paths = Files.walk(dir, FileVisitOption.FOLLOW_LINKS)) {
+            paths.filter(p -> !Files.isDirectory(p)).forEach(this::save);
+        } catch (IOException e) {
+            logger.error("{}: {}", e.getClass().getName(), e.getMessage());
+        }
+    }
 
-        if (this.incomingFileRepository.findByPath(relativePath.toString()) == null) {
-            logger.debug("Saving incoming file for path: {}", relativePath);
-            this.incomingFileRepository.save(new IncomingFile(relativePath.toString()));
+    private void save(Path file) {
+        if (!file.getFileName().toString().startsWith(".") && !file.getFileName().toString().endsWith(".meta")) {
+            Path relativePath = relativize(file);
+
+            if (this.incomingFileRepository.findByPath(relativePath.toString()) == null) {
+                logger.debug("Saving incoming file for path: {}", relativePath);
+                this.incomingFileRepository.save(new IncomingFile(relativePath.toString()));
+            }
         }
     }
 
