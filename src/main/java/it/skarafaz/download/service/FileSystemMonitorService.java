@@ -49,6 +49,8 @@ public class FileSystemMonitorService implements ApplicationRunner, OnCreateList
     }
 
     private void sync() {
+        logger.info("Syncing database...");
+
         for (IncomingFile incomingFile : this.incomingFileRepository.findAll()) {
             File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());
 
