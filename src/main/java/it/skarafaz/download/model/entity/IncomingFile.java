@@ -22,8 +22,9 @@ public class IncomingFile {
     public IncomingFile() {
     }
 
-    public IncomingFile(String path) {
+    public IncomingFile(String path, Boolean feed) {
         this.path = path;
+        this.feed = feed;
     }
 
     @Id

@@ -15,6 +15,7 @@ public class AppProperties {
     private String version;
     private String url;
     private String watchDirectory;
+    private String noFeedDirectoryName;
 
     public AppProperties() {
     }
@@ -24,6 +25,7 @@ public class AppProperties {
         this.version = props.getVersion();
         this.url = props.getUrl();
         this.watchDirectory = props.getWatchDirectory();
+        this.noFeedDirectoryName = props.getNoFeedDirectoryName();
     }
 
     public String getName() {
@@ -56,6 +58,14 @@ public class AppProperties {
 
     public void setWatchDirectory(String watchDirectory) {
         this.watchDirectory = watchDirectory;
+    }
+
+    public String getNoFeedDirectoryName() {
+        return noFeedDirectoryName;
+    }
+
+    public void setNoFeedDirectoryName(String noFeedDirectoryName) {
+        this.noFeedDirectoryName = noFeedDirectoryName;
     }
 
     @JsonIgnore

@@ -86,7 +86,13 @@ public class FileSystemMonitorService implements ApplicationRunner, OnCreateList
 
             if (this.incomingFileRepository.findByPath(relativePath.toString()) == null) {
                 logger.debug("Saving incoming file for path: {}", relativePath);
-                this.incomingFileRepository.save(new IncomingFile(relativePath.toString()));
+
+                String pattern1 = File.separator + this.appProperties.getNoFeedDirectoryName() + File.separator;
+                String pattern2 = this.appProperties.getNoFeedDirectoryName() + File.separator;
+
+                Boolean feed = !(relativePath.toString().contains(pattern1) || relativePath.toString().contains(pattern2));
+
+                this.incomingFileRepository.save(new IncomingFile(relativePath.toString(), feed));
             }
         }
     }
