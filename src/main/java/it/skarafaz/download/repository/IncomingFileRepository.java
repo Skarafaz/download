@@ -22,6 +22,10 @@ public interface IncomingFileRepository extends JpaRepository<IncomingFile, Long
     @Query("update IncomingFile set feed = ?2 where id in ?1")
     void updateFeed(List<Long> ids, Boolean feed);
 
+    @Modifying
+    @Query("update IncomingFile set shared = ?2 where id in ?1")
+    void updateShared(List<Long> ids, Boolean shared);
+
     void deleteByPath(String path);
 
     @Modifying

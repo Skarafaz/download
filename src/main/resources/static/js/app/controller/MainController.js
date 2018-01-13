@@ -10,7 +10,9 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         SHOW_URL : 'file/show',
         ADD_URL : 'file/add',
         REMOVE_URL : 'file/remove',
-        DOWNLOAD_URL : 'file/download/regular/',
+        SHARE_URL : 'file/share',
+        UNSHARE_URL : 'file/unshare',
+        DOWNLOAD_URL : 'file/download',
         KEY_UP_TIMEOUT : 300,
 
         properties : null,
@@ -25,6 +27,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         showButton : null,
         addButton : null,
         removeButton : null,
+        shareButton : null,
+        unshareButton : null,
         clipboardButton : null,
         clipboard : null,
         toggleShowHiddenButton : null,
@@ -97,6 +101,26 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
             this.removeButton.startup();
             this.toolbar.addChild(this.removeButton);
+
+            this.toolbar.addChild(new ToolbarSeparator());
+
+            this.shareButton = new Button({
+                iconClass : 'toolbarIcon shareButtonIcon',
+                label : this.messagesManager.get('main.toolbar.share'),
+                onClick : lang.hitch(this, this.onShareButtonClick),
+                disabled : true
+            });
+            this.shareButton.startup();
+            this.toolbar.addChild(this.shareButton);
+
+            this.unshareButton = new Button({
+                iconClass : 'toolbarIcon unshareButtonIcon',
+                label : this.messagesManager.get('main.toolbar.unshare'),
+                onClick : lang.hitch(this, this.onUnshareButtonClick),
+                disabled : true
+            });
+            this.unshareButton.startup();
+            this.toolbar.addChild(this.unshareButton);
 
             this.toolbar.addChild(new ToolbarSeparator());
 
@@ -174,7 +198,13 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                     field : 'feed',
                     label : '',
                     formatter : lang.hitch(this, function(value) {
-                        return value ? '<i class="fa fa-file-o fa-flip-horizontal"></i>' : '';
+                        return value ? '<i class="fa fa-file fa-flip-horizontal"></i>' : '';
+                    })
+                }, {
+                    field : 'shared',
+                    label : '',
+                    formatter : lang.hitch(this, function(value) {
+                        return value ? '<i class="fa fa-user"></i>' : '';
                     })
                 } ],
                 loadingMessage : '<div style="padding: 5px;"><i class="fa fa-spinner fa-spin fa-lg"></i></div>',
@@ -206,6 +236,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.showButton.set('disabled', selected === 0);
             this.addButton.set('disabled', selected === 0);
             this.removeButton.set('disabled', selected === 0);
+            this.shareButton.set('disabled', selected === 0);
+            this.unshareButton.set('disabled', selected === 0);
             this.clipboardButton.set('disabled', selected === 0);
         },
         onRefreshButtonClick : function() {
@@ -234,6 +266,20 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         },
         onRemoveButtonClick : function() {
             this.xhrManager.post(this.REMOVE_URL, {
+                data : this.getSelectedIds()
+            }).then(lang.hitch(this, function() {
+                this.grid.refresh();
+            }));
+        },
+        onShareButtonClick : function() {
+            this.xhrManager.post(this.SHARE_URL, {
+                data : this.getSelectedIds()
+            }).then(lang.hitch(this, function() {
+                this.grid.refresh();
+            }));
+        },
+        onUnshareButtonClick : function() {
+            this.xhrManager.post(this.UNSHARE_URL, {
                 data : this.getSelectedIds()
             }).then(lang.hitch(this, function() {
                 this.grid.refresh();
@@ -284,9 +330,10 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             return ids;
         },
         createDownloadUrl : function(item) {
-            return string.substitute('${base}${download}${id}?${path}', {
+            return string.substitute('${base}${download}/${type}/${id}?${path}', {
                 base : this.properties.url,
                 download : this.DOWNLOAD_URL,
+                type : item.shared ? 'shared' : 'regular',
                 id : item.id,
                 path : item.path
             });

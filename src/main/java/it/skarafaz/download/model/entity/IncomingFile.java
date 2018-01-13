@@ -17,6 +17,7 @@ public class IncomingFile {
     private Long id;
     private String path;
     private Boolean feed = true;
+    private Boolean shared = false;
     private Boolean hidden = false;
 
     public IncomingFile() {
@@ -56,6 +57,16 @@ public class IncomingFile {
 
     public void setFeed(Boolean feed) {
         this.feed = feed;
+    }
+
+    @NotNull
+    @Column(nullable = false)
+    public Boolean getShared() {
+        return shared;
+    }
+
+    public void setShared(Boolean shared) {
+        this.shared = shared;
     }
 
     @NotNull

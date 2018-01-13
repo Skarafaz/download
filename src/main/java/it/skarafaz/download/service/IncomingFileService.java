@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.skarafaz.download.configuration.AppProperties;
 import it.skarafaz.download.exception.IncomingFileNotFoundException;
+import it.skarafaz.download.exception.IncomingFileNotSharedException;
 import it.skarafaz.download.model.DownloadType;
 import it.skarafaz.download.model.OnDemandListResponse;
 import it.skarafaz.download.model.Sort;
@@ -54,11 +55,23 @@ public class IncomingFileService {
         this.incomingFileRepository.updateFeed(ids, false);
     }
 
+    public void share(List<Long> ids) {
+        this.incomingFileRepository.updateShared(ids, true);
+    }
+
+    public void unshare(List<Long> ids) {
+        this.incomingFileRepository.updateShared(ids, false);
+    }
+
     public void download(Long id, DownloadType type, HttpServletRequest request, HttpServletResponse response) {
         IncomingFile incomingFile = this.incomingFileRepository.findOne(id);
 
         if (incomingFile == null) {
             throw new IncomingFileNotFoundException(id);
+        }
+
+        if (type == DownloadType.shared && incomingFile.getShared() == false) {
+            throw new IncomingFileNotSharedException(id);
         }
 
         File file = new File(this.appProperties.getWatchDirectory(), incomingFile.getPath());

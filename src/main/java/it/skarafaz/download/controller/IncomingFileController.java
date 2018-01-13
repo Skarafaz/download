@@ -57,6 +57,18 @@ public class IncomingFileController {
         return true;
     }
 
+    @PostMapping("/share")
+    public @ResponseBody Boolean share(@RequestBody List<Long> ids) {
+        this.incomingFileService.share(ids);
+        return true;
+    }
+
+    @PostMapping("/unshare")
+    public @ResponseBody Boolean unshare(@RequestBody List<Long> ids) {
+        this.incomingFileService.unshare(ids);
+        return true;
+    }
+
     @GetMapping("/download/{type}/{id}")
     public void download(@PathVariable DownloadType type, @PathVariable Long id, HttpServletRequest request,
             HttpServletResponse response) {
