@@ -43,6 +43,14 @@ public class IncomingFileService {
         this.incomingFileRepository.updateHidden(ids, false);
     }
 
+    public void add(List<Long> ids) {
+        this.incomingFileRepository.updateFeed(ids, true);
+    }
+
+    public void remove(List<Long> ids) {
+        this.incomingFileRepository.updateFeed(ids, false);
+    }
+
     public void download(Long id, HttpServletRequest request, HttpServletResponse response) {
         IncomingFile incomingFile = this.incomingFileRepository.findOne(id);
 

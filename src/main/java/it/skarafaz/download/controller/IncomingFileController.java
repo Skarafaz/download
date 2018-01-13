@@ -43,6 +43,18 @@ public class IncomingFileController {
         return true;
     }
 
+    @PostMapping("/add")
+    public @ResponseBody Boolean add(@RequestBody List<Long> ids) {
+        this.incomingFileService.add(ids);
+        return true;
+    }
+
+    @PostMapping("/remove")
+    public @ResponseBody Boolean remove(@RequestBody List<Long> ids) {
+        this.incomingFileService.remove(ids);
+        return true;
+    }
+
     @GetMapping("/download/{id}")
     public void download(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
         this.incomingFileService.download(id, request, response);

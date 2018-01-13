@@ -64,6 +64,14 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
     background-image: url("../img/show.png");
 }
 
+.app .toolbarIcon.addButtonIcon {
+    background-image: url("../img/add.png");
+}
+
+.app .toolbarIcon.removeButtonIcon {
+    background-image: url("../img/remove.png");
+}
+
 .app .toolbarIcon.clipboardButtonIcon {
     background-image: url("../img/copy.png");
 }
@@ -108,7 +116,8 @@ abbr:focus, acronym:focus, address:focus, b:focus, base:focus, big:focus,
 }
 
 .app .dgrid .field-selector,
-.app .dgrid .field-download {
+.app .dgrid .field-download,
+.app .dgrid .field-feed {
     width: 30px;
     text-align: center;
 }

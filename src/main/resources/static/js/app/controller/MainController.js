@@ -8,6 +8,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         LIST_URL : 'file/list',
         HIDE_URL : 'file/hide',
         SHOW_URL : 'file/show',
+        ADD_URL : 'file/add',
+        REMOVE_URL : 'file/remove',
         DOWNLOAD_URL : 'file/download/',
         KEY_UP_TIMEOUT : 300,
 
@@ -21,6 +23,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         refreshButton : null,
         hideButton : null,
         showButton : null,
+        addButton : null,
+        removeButton : null,
         clipboardButton : null,
         clipboard : null,
         toggleShowHiddenButton : null,
@@ -73,6 +77,26 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             });
             this.showButton.startup();
             this.toolbar.addChild(this.showButton);
+
+            this.toolbar.addChild(new ToolbarSeparator());
+
+            this.addButton = new Button({
+                iconClass : 'toolbarIcon addButtonIcon',
+                label : this.messagesManager.get('main.toolbar.add'),
+                onClick : lang.hitch(this, this.onAddButtonClick),
+                disabled : true
+            });
+            this.showButton.startup();
+            this.toolbar.addChild(this.addButton);
+
+            this.removeButton = new Button({
+                iconClass : 'toolbarIcon removeButtonIcon',
+                label : this.messagesManager.get('main.toolbar.remove'),
+                onClick : lang.hitch(this, this.onRemoveButtonClick),
+                disabled : true
+            });
+            this.removeButton.startup();
+            this.toolbar.addChild(this.removeButton);
 
             this.toolbar.addChild(new ToolbarSeparator());
 
@@ -146,6 +170,12 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
                 }, {
                     field : 'path',
                     label : this.messagesManager.get('main.grid.path')
+                }, {
+                    field : 'feed',
+                    label : '',
+                    formatter : lang.hitch(this, function(value) {
+                        return value ? '<i class="fa fa-file-o fa-flip-horizontal"></i>' : '';
+                    })
                 } ],
                 loadingMessage : '<div style="padding: 5px;"><i class="fa fa-spinner fa-spin fa-lg"></i></div>',
                 noDataMessage : this.messagesManager.get('main.grid.noData'),
@@ -174,6 +204,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
 
             this.hideButton.set('disabled', selected === 0);
             this.showButton.set('disabled', selected === 0);
+            this.addButton.set('disabled', selected === 0);
+            this.removeButton.set('disabled', selected === 0);
             this.clipboardButton.set('disabled', selected === 0);
         },
         onRefreshButtonClick : function() {
@@ -188,6 +220,20 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         },
         onShowButtonClick : function() {
             this.xhrManager.post(this.SHOW_URL, {
+                data : this.getSelectedIds()
+            }).then(lang.hitch(this, function() {
+                this.grid.refresh();
+            }));
+        },
+        onAddButtonClick : function() {
+            this.xhrManager.post(this.ADD_URL, {
+                data : this.getSelectedIds()
+            }).then(lang.hitch(this, function() {
+                this.grid.refresh();
+            }));
+        },
+        onRemoveButtonClick : function() {
+            this.xhrManager.post(this.REMOVE_URL, {
                 data : this.getSelectedIds()
             }).then(lang.hitch(this, function() {
                 this.grid.refresh();
