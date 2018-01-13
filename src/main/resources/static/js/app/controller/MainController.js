@@ -10,7 +10,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         SHOW_URL : 'file/show',
         ADD_URL : 'file/add',
         REMOVE_URL : 'file/remove',
-        DOWNLOAD_URL : 'file/download/',
+        DOWNLOAD_URL : 'file/download/regular/',
         KEY_UP_TIMEOUT : 300,
 
         properties : null,

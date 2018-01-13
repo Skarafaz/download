@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.skarafaz.download.configuration.AppProperties;
 import it.skarafaz.download.exception.IncomingFileNotFoundException;
+import it.skarafaz.download.model.DownloadType;
 import it.skarafaz.download.model.OnDemandListResponse;
 import it.skarafaz.download.model.Sort;
 import it.skarafaz.download.model.entity.IncomingFile;
@@ -30,8 +31,10 @@ public class IncomingFileService {
     @Autowired
     private AppProperties appProperties;
 
-    public OnDemandListResponse<IncomingFile> list(Integer start, Integer count, String sort, Boolean showHidden, String search) {
-        return new OnDemandListResponse<>(this.incomingFileRepository.list(start, count, new Sort(sort), showHidden, search),
+    public OnDemandListResponse<IncomingFile> list(Integer start, Integer count, String sort, Boolean showHidden,
+            String search) {
+        return new OnDemandListResponse<>(
+                this.incomingFileRepository.list(start, count, new Sort(sort), showHidden, search),
                 this.incomingFileRepository.count(showHidden, search));
     }
 
@@ -51,7 +54,7 @@ public class IncomingFileService {
         this.incomingFileRepository.updateFeed(ids, false);
     }
 
-    public void download(Long id, HttpServletRequest request, HttpServletResponse response) {
+    public void download(Long id, DownloadType type, HttpServletRequest request, HttpServletResponse response) {
         IncomingFile incomingFile = this.incomingFileRepository.findOne(id);
 
         if (incomingFile == null) {
@@ -76,7 +79,10 @@ public class IncomingFileService {
             in = new FileInputStream(file);
             out = response.getOutputStream();
             IOUtils.copyLarge(in, out);
-            incomingFile.setFeed(false);
+
+            if (type == DownloadType.feed) {
+                incomingFile.setFeed(false);
+            }
         } catch (ClientAbortException e) {
             // ignore
         } catch (IOException e) {
@@ -94,7 +100,8 @@ public class IncomingFileService {
         for (int i = 0; i < incomingFiles.size(); i++) {
             IncomingFile incomingFile = incomingFiles.get(i);
 
-            content += String.format("%sfile/download/%d?%s", appProperties.getUrl(), incomingFile.getId(), incomingFile.getPath());
+            content += String.format("%sfile/download/%s/%d?%s", appProperties.getUrl(), DownloadType.feed.name(),
+                    incomingFile.getId(), incomingFile.getPath());
 
             if (i != incomingFiles.size() - 1) {
                 content += "\n";

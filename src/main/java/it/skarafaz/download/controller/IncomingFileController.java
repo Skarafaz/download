@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import it.skarafaz.download.model.DownloadType;
 import it.skarafaz.download.model.OnDemandListResponse;
 import it.skarafaz.download.model.entity.IncomingFile;
 import it.skarafaz.download.service.IncomingFileService;
@@ -26,8 +27,9 @@ public class IncomingFileController {
     private IncomingFileService incomingFileService;
 
     @GetMapping("/list")
-    public @ResponseBody OnDemandListResponse<IncomingFile> list(@RequestParam Integer start, @RequestParam Integer count, @RequestParam String sort,
-            @RequestParam Boolean showHidden, @RequestParam String search) {
+    public @ResponseBody OnDemandListResponse<IncomingFile> list(@RequestParam Integer start,
+            @RequestParam Integer count, @RequestParam String sort, @RequestParam Boolean showHidden,
+            @RequestParam String search) {
         return this.incomingFileService.list(start, count, sort, showHidden, search);
     }
 
@@ -55,9 +57,10 @@ public class IncomingFileController {
         return true;
     }
 
-    @GetMapping("/download/{id}")
-    public void download(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-        this.incomingFileService.download(id, request, response);
+    @GetMapping("/download/{type}/{id}")
+    public void download(@PathVariable DownloadType type, @PathVariable Long id, HttpServletRequest request,
+            HttpServletResponse response) {
+        this.incomingFileService.download(id, type, request, response);
     }
 
     @GetMapping("/feed")
