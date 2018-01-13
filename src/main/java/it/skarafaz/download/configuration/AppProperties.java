@@ -16,6 +16,8 @@ public class AppProperties {
     private String url;
     private String watchDirectory;
     private String noFeedDirectoryName;
+    private String sharedDirectoryName;
+    private String hiddenDirectoryName;
 
     public AppProperties() {
     }
@@ -26,6 +28,8 @@ public class AppProperties {
         this.url = props.getUrl();
         this.watchDirectory = props.getWatchDirectory();
         this.noFeedDirectoryName = props.getNoFeedDirectoryName();
+        this.sharedDirectoryName = props.getSharedDirectoryName();
+        this.hiddenDirectoryName = props.getHiddenDirectoryName();
     }
 
     public String getName() {
@@ -66,6 +70,22 @@ public class AppProperties {
 
     public void setNoFeedDirectoryName(String noFeedDirectoryName) {
         this.noFeedDirectoryName = noFeedDirectoryName;
+    }
+
+    public String getSharedDirectoryName() {
+        return sharedDirectoryName;
+    }
+
+    public void setSharedDirectoryName(String sharedDirectoryName) {
+        this.sharedDirectoryName = sharedDirectoryName;
+    }
+
+    public String getHiddenDirectoryName() {
+        return hiddenDirectoryName;
+    }
+
+    public void setHiddenDirectoryName(String hiddenDirectoryName) {
+        this.hiddenDirectoryName = hiddenDirectoryName;
     }
 
     @JsonIgnore

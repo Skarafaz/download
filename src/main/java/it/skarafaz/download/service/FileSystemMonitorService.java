@@ -87,14 +87,19 @@ public class FileSystemMonitorService implements ApplicationRunner, OnCreateList
             if (this.incomingFileRepository.findByPath(relativePath.toString()) == null) {
                 logger.debug("Saving incoming file for path: {}", relativePath);
 
-                String pattern1 = File.separator + this.appProperties.getNoFeedDirectoryName() + File.separator;
-                String pattern2 = this.appProperties.getNoFeedDirectoryName() + File.separator;
+                Boolean feed = !pathContainsDirectoryName(relativePath, this.appProperties.getNoFeedDirectoryName());
+                Boolean shared = pathContainsDirectoryName(relativePath, this.appProperties.getSharedDirectoryName());
+                Boolean hidden = pathContainsDirectoryName(relativePath, this.appProperties.getHiddenDirectoryName());
 
-                Boolean feed = !(relativePath.toString().contains(pattern1) || relativePath.toString().contains(pattern2));
-
-                this.incomingFileRepository.save(new IncomingFile(relativePath.toString(), feed));
+                this.incomingFileRepository.save(new IncomingFile(relativePath.toString(), feed, shared, hidden));
             }
         }
+    }
+
+    private Boolean pathContainsDirectoryName(Path path, String directoryName) {
+        String pattern1 = File.separator + directoryName + File.separator;
+        String pattern2 = directoryName + File.separator;
+        return path.toString().contains(pattern1) || path.toString().contains(pattern2);
     }
 
     @Override

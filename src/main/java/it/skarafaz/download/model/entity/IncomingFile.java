@@ -20,12 +20,11 @@ public class IncomingFile {
     private Boolean shared = false;
     private Boolean hidden = false;
 
-    public IncomingFile() {
-    }
-
-    public IncomingFile(String path, Boolean feed) {
+    public IncomingFile(String path, Boolean feed, Boolean shared, Boolean hidden) {
         this.path = path;
         this.feed = feed;
+        this.shared = shared;
+        this.hidden = hidden;
     }
 
     @Id
