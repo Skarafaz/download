@@ -68,6 +68,7 @@ public class IncomingFileService {
             in = new FileInputStream(file);
             out = response.getOutputStream();
             IOUtils.copyLarge(in, out);
+            incomingFile.setFeed(false);
         } catch (ClientAbortException e) {
             // ignore
         } catch (IOException e) {
@@ -76,8 +77,6 @@ public class IncomingFileService {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(out);
         }
-
-        incomingFile.setFeed(false);
     }
 
     public void feed(HttpServletResponse response) {
