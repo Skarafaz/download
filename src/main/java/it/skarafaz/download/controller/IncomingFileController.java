@@ -35,37 +35,37 @@ public class IncomingFileController {
 
     @PostMapping("/hide")
     public @ResponseBody Boolean hide(@RequestBody List<Long> ids) {
-        this.incomingFileService.hide(ids);
+        this.incomingFileService.updateHidden(ids, true);
         return true;
     }
 
     @PostMapping("/show")
     public @ResponseBody Boolean show(@RequestBody List<Long> ids) {
-        this.incomingFileService.show(ids);
+        this.incomingFileService.updateHidden(ids, false);
         return true;
     }
 
     @PostMapping("/add")
     public @ResponseBody Boolean add(@RequestBody List<Long> ids) {
-        this.incomingFileService.add(ids);
+        this.incomingFileService.updateFeed(ids, true);
         return true;
     }
 
     @PostMapping("/remove")
     public @ResponseBody Boolean remove(@RequestBody List<Long> ids) {
-        this.incomingFileService.remove(ids);
+        this.incomingFileService.updateFeed(ids, false);
         return true;
     }
 
     @PostMapping("/share")
     public @ResponseBody Boolean share(@RequestBody List<Long> ids) {
-        this.incomingFileService.share(ids);
+        this.incomingFileService.updateShared(ids, true);
         return true;
     }
 
     @PostMapping("/unshare")
     public @ResponseBody Boolean unshare(@RequestBody List<Long> ids) {
-        this.incomingFileService.unshare(ids);
+        this.incomingFileService.updateShared(ids, false);
         return true;
     }
 

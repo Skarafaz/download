@@ -67,7 +67,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.hideButton = new Button({
                 iconClass : 'toolbarIcon hideButtonIcon',
                 label : this.messagesManager.get('main.toolbar.hide'),
-                onClick : lang.hitch(this, this.onHideButtonClick),
+                onClick : lang.hitch(this, this.onActionButtonClick, this.HIDE_URL),
                 disabled : true
             });
             this.hideButton.startup();
@@ -76,7 +76,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.showButton = new Button({
                 iconClass : 'toolbarIcon showButtonIcon',
                 label : this.messagesManager.get('main.toolbar.show'),
-                onClick : lang.hitch(this, this.onShowButtonClick),
+                onClick : lang.hitch(this, this.onActionButtonClick, this.SHOW_URL),
                 disabled : true
             });
             this.showButton.startup();
@@ -87,7 +87,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.addButton = new Button({
                 iconClass : 'toolbarIcon addButtonIcon',
                 label : this.messagesManager.get('main.toolbar.add'),
-                onClick : lang.hitch(this, this.onAddButtonClick),
+                onClick : lang.hitch(this, this.onActionButtonClick, this.ADD_URL),
                 disabled : true
             });
             this.showButton.startup();
@@ -96,7 +96,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.removeButton = new Button({
                 iconClass : 'toolbarIcon removeButtonIcon',
                 label : this.messagesManager.get('main.toolbar.remove'),
-                onClick : lang.hitch(this, this.onRemoveButtonClick),
+                onClick : lang.hitch(this, this.onActionButtonClick, this.REMOVE_URL),
                 disabled : true
             });
             this.removeButton.startup();
@@ -107,7 +107,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.shareButton = new Button({
                 iconClass : 'toolbarIcon shareButtonIcon',
                 label : this.messagesManager.get('main.toolbar.share'),
-                onClick : lang.hitch(this, this.onShareButtonClick),
+                onClick : lang.hitch(this, this.onActionButtonClick, this.SHARE_URL),
                 disabled : true
             });
             this.shareButton.startup();
@@ -116,7 +116,7 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
             this.unshareButton = new Button({
                 iconClass : 'toolbarIcon unshareButtonIcon',
                 label : this.messagesManager.get('main.toolbar.unshare'),
-                onClick : lang.hitch(this, this.onUnshareButtonClick),
+                onClick : lang.hitch(this, this.onActionButtonClick, this.UNSHARE_URL),
                 disabled : true
             });
             this.unshareButton.startup();
@@ -243,43 +243,8 @@ function(declare, lang, registry, Button, ToggleButton, OnDemandGrid, Keyboard, 
         onRefreshButtonClick : function() {
             this.grid.refresh();
         },
-        onHideButtonClick : function() {
-            this.xhrManager.post(this.HIDE_URL, {
-                data : this.getSelectedIds()
-            }).then(lang.hitch(this, function() {
-                this.grid.refresh();
-            }));
-        },
-        onShowButtonClick : function() {
-            this.xhrManager.post(this.SHOW_URL, {
-                data : this.getSelectedIds()
-            }).then(lang.hitch(this, function() {
-                this.grid.refresh();
-            }));
-        },
-        onAddButtonClick : function() {
-            this.xhrManager.post(this.ADD_URL, {
-                data : this.getSelectedIds()
-            }).then(lang.hitch(this, function() {
-                this.grid.refresh();
-            }));
-        },
-        onRemoveButtonClick : function() {
-            this.xhrManager.post(this.REMOVE_URL, {
-                data : this.getSelectedIds()
-            }).then(lang.hitch(this, function() {
-                this.grid.refresh();
-            }));
-        },
-        onShareButtonClick : function() {
-            this.xhrManager.post(this.SHARE_URL, {
-                data : this.getSelectedIds()
-            }).then(lang.hitch(this, function() {
-                this.grid.refresh();
-            }));
-        },
-        onUnshareButtonClick : function() {
-            this.xhrManager.post(this.UNSHARE_URL, {
+        onActionButtonClick : function(url) {
+            this.xhrManager.post(url, {
                 data : this.getSelectedIds()
             }).then(lang.hitch(this, function() {
                 this.grid.refresh();

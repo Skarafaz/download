@@ -39,28 +39,16 @@ public class IncomingFileService {
                 this.incomingFileRepository.count(showHidden, search));
     }
 
-    public void hide(List<Long> ids) {
-        this.incomingFileRepository.updateHidden(ids, true);
+    public void updateHidden(List<Long> ids, Boolean hidden) {
+        this.incomingFileRepository.updateHidden(ids, hidden);
     }
 
-    public void show(List<Long> ids) {
-        this.incomingFileRepository.updateHidden(ids, false);
+    public void updateFeed(List<Long> ids, Boolean feed) {
+        this.incomingFileRepository.updateFeed(ids, feed);
     }
 
-    public void add(List<Long> ids) {
-        this.incomingFileRepository.updateFeed(ids, true);
-    }
-
-    public void remove(List<Long> ids) {
-        this.incomingFileRepository.updateFeed(ids, false);
-    }
-
-    public void share(List<Long> ids) {
-        this.incomingFileRepository.updateShared(ids, true);
-    }
-
-    public void unshare(List<Long> ids) {
-        this.incomingFileRepository.updateShared(ids, false);
+    public void updateShared(List<Long> ids, Boolean shared) {
+        this.incomingFileRepository.updateShared(ids, shared);
     }
 
     public void download(Long id, DownloadType type, HttpServletRequest request, HttpServletResponse response) {
